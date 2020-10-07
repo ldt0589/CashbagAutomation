@@ -1,0 +1,20 @@
+{
+  "REF03_REF05_User_receive_bonus_when_registering_with_referral_link_in_WEB":[
+    {
+      "TCID": "REF03",
+      "TestDataPurpose": "In WEB, User receives referral bonus when registering account using referral link",
+      "RunMode": "Y",
+      "TestingType": "Regression",
+      "TestType": "Positive",
+      "referral_path": "/"
+      },
+    {
+      "TCID": "REF04",
+      "TestDataPurpose": "In WEB, User receives referral bonus when registering account using mission referral link",
+      "RunMode": "Y",
+      "TestingType": "Regression",
+      "TestType": "Positive",
+      "referral_path": "/mission/"
+    }
+  ]
+}

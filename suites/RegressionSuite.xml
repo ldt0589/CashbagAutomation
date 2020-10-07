@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Regression" parallel="classes">
+    <listeners>
+        <listener class-name="resource.common.SuiteAlterer"/>
+    </listeners>
+    <test name="test1">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="feature.Issue.Create_Issue"/>
+            <class name="feature.Issue.Create_Issue2"/>
+            <class name="feature.Issue.Create_Issue3"/>
+        </classes>
+    </test>
+</suite>

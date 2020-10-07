@@ -1,0 +1,23 @@
+2020-10-06 17:51:34,312 INFO  [java.lang.Object] - beforeSuite method - Start
+2020-10-06 17:51:35,036 INFO  [java.lang.Object] - Report folder: F:\AUTOMATION\7.CashBag\Cashbag_Automation/src/main/resources/output/report-2020-10-06-17-51-33/
+2020-10-06 17:51:35,154 INFO  [java.lang.Object] - Test data: F:\AUTOMATION\7.CashBag\Cashbag_Automation/src/main/resources/configuration/Configuration.properties
+2020-10-06 17:51:35,155 INFO  [java.lang.Object] - Testing Type: Regression
+2020-10-06 17:51:35,155 INFO  [java.lang.Object] - Environment: svc.cashbagmain.com
+2020-10-06 17:51:35,158 INFO  [java.lang.Object] - Run On: Local
+2020-10-06 17:51:35,159 INFO  [java.lang.Object] - Browser name: Chrome
+2020-10-06 17:51:35,159 INFO  [java.lang.Object] - OS name: windows 10
+2020-10-06 17:51:35,161 INFO  [java.lang.Object] - beforeSuite method - End
+2020-10-06 17:51:35,180 INFO  [java.lang.Object] - beforeClass method - start
+2020-10-06 17:51:35,181 INFO  [java.lang.Object] - beforeClass method - End
+2020-10-06 17:51:35,369 INFO  [java.lang.Object] - beforeMethod method - Start
+2020-10-06 17:51:35,372 INFO  [java.lang.Object] - null: In WEB, User receives referral bonus when registering account using referral link
+2020-10-06 17:51:43,921 INFO  [java.lang.Object] - beforeMethod method - End
+2020-10-06 17:51:43,923 INFO  [java.lang.Object] - Get User info by email: cashbag.qa@gmail.com
+2020-10-06 17:51:43,924 ERROR [java.lang.Object] - getUserInfo method - ERROR: java.lang.NullPointerException
+2020-10-06 17:51:46,381 INFO  [java.lang.Object] - Exception while taking screenshot: null
+2020-10-06 17:51:46,385 ERROR [java.lang.Object] - resource.utility.Utility.logException(Utility.java:223)</br>resource.api.userAPI.getUserInfo(userAPI.java:61)</br>feature.MissionEvent.Referral.REF03_REF05_User_receive_bonus_when_registering_with_referral_link_in_WEB.Test(REF03_REF05_User_receive_bonus_when_registering_with_referral_link_in_WEB.java:37)</br>
+2020-10-06 17:51:48,696 INFO  [java.lang.Object] - afterMethod method - Start
+2020-10-06 17:51:49,474 INFO  [java.lang.Object] - Closed browser and released device
+2020-10-06 17:51:49,475 INFO  [java.lang.Object] - afterMethod method - End
+2020-10-06 17:51:49,476 INFO  [java.lang.Object] - beforeMethod method - Start
+2020-10-06 17:51:49,477 INFO  [java.lang.Object] - null: In WEB, User receives referral bonus when registering account using mission referral link

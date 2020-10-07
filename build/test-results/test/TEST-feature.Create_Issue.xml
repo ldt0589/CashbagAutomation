@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="feature.Create_Issue" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-08-08T09:40:39" hostname="LGDN14090-W7D01" time="13.205">
+  <properties/>
+  <testcase name="TC01[0]({IssueSummary=This is a bug, IssueType=Bug, RunMode=Y, TestType=Positive, TestingType=Regression, TestDataPurpose=Create an issue as Bug, ProjectName=Project_Demo, No.=Data1})" classname="feature.Create_Issue" time="13.205"/>
+  <system-out><![CDATA[2020-08-08 16:40:46,754 DEBUG Object - Login to JIRA...start
+2020-08-08 16:40:48,482 INFO  Object - Login to JIRA portal...end
+2020-08-08 16:40:52,713 INFO  Object - afterMethod method - Start
+2020-08-08 16:40:54,120 INFO  Object - afterMethod method - End
+]]></system-out>
+  <system-err><![CDATA[Aug 08, 2020 4:40:53 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: W3C
+]]></system-err>
+</testsuite>

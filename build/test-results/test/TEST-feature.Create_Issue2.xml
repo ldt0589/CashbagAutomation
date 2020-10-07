@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="feature.Create_Issue2" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-08-08T09:40:39" hostname="LGDN14090-W7D01" time="9.221">
+  <properties/>
+  <testcase name="TC01[0]({IssueSummary=This is a bug, IssueType=Bug, RunMode=Y, TestType=Positive, TestingType=Regression, TestDataPurpose=Create an issue as Bug, ProjectName=Project_Demo, No.=Data2})" classname="feature.Create_Issue2" time="9.221"/>
+  <system-out><![CDATA[2020-08-08 16:40:33,881 INFO  Object - beforeClass method - start
+2020-08-08 16:40:33,883 INFO  Object - beforeClass method - End
+2020-08-08 16:40:33,882 INFO  Object - beforeClass method - start
+2020-08-08 16:40:33,887 INFO  Object - beforeClass method - End
+2020-08-08 16:40:33,962 INFO  Object - beforeMethod method - Start
+2020-08-08 16:40:33,962 INFO  Object - beforeMethod method - Start
+2020-08-08 16:40:33,963 INFO  Object - Data2: Create an issue as Bug
+2020-08-08 16:40:33,963 INFO  Object - Data1: Create an issue as Bug
+2020-08-08 16:40:39,260 INFO  Object - beforeMethod method - End
+2020-08-08 16:40:39,508 INFO  Object - beforeMethod method - End
+2020-08-08 16:40:48,485 INFO  Object - afterMethod method - Start
+2020-08-08 16:40:49,970 INFO  Object - afterMethod method - End
+]]></system-out>
+  <system-err><![CDATA[Starting ChromeDriver 79.0.3945.36 (3582db32b33893869b8c1339e8f4d9ed1816f143-refs/branch-heads/3945@{#614}) on port 15454
+Only local connections are allowed.
+Please protect ports used by ChromeDriver and related test frameworks to prevent access by malicious code.
+Starting ChromeDriver 79.0.3945.36 (3582db32b33893869b8c1339e8f4d9ed1816f143-refs/branch-heads/3945@{#614}) on port 45441
+Only local connections are allowed.
+Please protect ports used by ChromeDriver and related test frameworks to prevent access by malicious code.
+Aug 08, 2020 4:40:37 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: W3C
+Aug 08, 2020 4:40:38 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: W3C
+]]></system-err>
+</testsuite>

@@ -1,0 +1,38 @@
+{
+  "Create_Issue":[
+    {
+      "No.": "Data1",
+      "TestDataPurpose": "Create an issue as Bug",
+      "RunMode": "Y",
+      "TestingType": "Regression",
+      "TestType": "Positive",
+      "ProjectName": "Project_Demo",
+      "IssueType": "Bug",
+      "IssueSummary": "This is a bug"
+      }
+  ],
+  "Create_Issue2":[
+    {
+      "No.": "Data2",
+      "TestDataPurpose": "Create an issue as Bug",
+      "RunMode": "Y",
+      "TestingType": "Regression",
+      "TestType": "Positive",
+      "ProjectName": "Project_Demo",
+      "IssueType": "Bug",
+      "IssueSummary": "This is a bug"
+    }
+  ],
+  "Create_Issue3":[
+    {
+      "No.": "Data3",
+      "TestDataPurpose": "Create an issue as Bug",
+      "RunMode": "Y",
+      "TestingType": "Regression",
+      "TestType": "Positive",
+      "ProjectName": "Project_Demo",
+      "IssueType": "Bug",
+      "IssueSummary": "This is a bug"
+    }
+  ]
+}
