@@ -36,7 +36,7 @@ public class userAPI extends RestAssuredConfiguration {
         deleteUserSpec.queryParam("email", email);
         response = deleteUserSpec.delete("/api/user");
 
-        logInfo(logTest, "----->Delete User Account - RESPONSE: " + "<br>" + response.getBody().asString());
+//        logInfo(logTest, "----->Delete User Account - RESPONSE: " + "<br>" + response.getBody().asString());
 
         handleResponseStatusCode(response, 200, logTest);
 
@@ -46,7 +46,6 @@ public class userAPI extends RestAssuredConfiguration {
     public HashMap getUserInfo(ExtentTest logTest, String email) throws IOException {
         HashMap userInfo = null;
         try {
-            logInfo(logTest, "Get User info by email: " + email);
             RequestSpecification getUserInfoSpec = new userAPI().UserSpecification();
             getUserInfoSpec.queryParam("email", email);
             Response response = getUserInfoSpec.get("/api/user");

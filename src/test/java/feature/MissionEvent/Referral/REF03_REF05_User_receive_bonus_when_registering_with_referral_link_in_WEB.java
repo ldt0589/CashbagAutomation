@@ -30,15 +30,15 @@ public class REF03_REF05_User_receive_bonus_when_registering_with_referral_link_
         if (isTestCaseExecutable && isTestDataExecutable(data, logMethod)) {
             try {
 
-//                logStep = logStepInfo(logMethod, "PRE-CONDITION: Make sure account doesn't exist in CASHBAG DB");
+//                logStep = logStepInfo(logMethod, "PRE-CONDITION: ");
+//                logInfo(logStep, "Clear user to make sure account doesn't exist in CASHBAG DB");
 //                userAPI.deleteUserAccount(logStep, GlobalVariables.gg_username);
 
-
+                logStep = logStepInfo(logMethod, "Get User Information");
                 userID = userAPI.getUserInfo(logStep, GlobalVariables.gg_username).get("data.user._id").toString();
-                logStep = logStepInfo(logMethod, "UserID: " + userID);
-
-                userToken = userAPI.getUserInfo(logStep, GlobalVariables.gg_username).get("data.token").toString();
-                logStep = logStepInfo(logMethod, "UserToken: " + userToken);
+//                logInfo(logStep, "----->UserID: " + userID);
+//                userToken = userAPI.getUserInfo(logStep, GlobalVariables.gg_username).get("data.token").toString();
+//                logInfo(logStep, "----->UserToken: " + userToken);
 
 
 //                logStep = logStepInfo(logMethod, "Step #1: Access referral link: " + CB_URL + data.get("referral_path") + referral_code);
