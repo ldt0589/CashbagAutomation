@@ -141,6 +141,19 @@ public class Utility {
         }
     }
 
+    public static void verifyUserStatistic(ExtentTest logTest, String expected, String actual) throws IOException {
+        try {
+            if (actual.trim().equalsIgnoreCase(expected)) {
+                logPass(logTest, "Expected Result: " + expected + "<br/>Actual Result: " + actual);
+            } else {
+                logFail(logTest, "Expected Result: " + expected + "<br/>Actual Result: " + actual);
+            }
+        } catch (Exception e) {
+            log4j.error("verifyUserStatistic method - ERROR - " + e);
+            logException(logTest, "verifyUserStatistic method - ERROR", e);
+        }
+    }
+
     public static void checkControlExist(ExtentTest logTest, WebElement elementName, String objectName) throws IOException {
         try {
             waitForControl(elementName);

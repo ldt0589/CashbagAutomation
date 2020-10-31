@@ -1,6 +1,7 @@
 package resource.api;
 
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.model.AbstractStructure;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.json.simple.JSONObject;
@@ -20,11 +21,22 @@ public class userAPI extends RestAssuredConfiguration {
 
     private JSONParser jsonParser = new JSONParser();
     private JSONObject jsonExpected = null;
-    private JSONObject jsonActual = null;
+    private JSONObject jsonUserInfo = null;
+    private JSONObject jsonUserMeInfo = null;
+    private String userStatistic = null;
+    private String userId = null;
+    private String userToken = null;
 
     private RequestSpecification UserSpecification() {
         return given().
                 baseUri("https://" + GlobalVariables.ENVIRONMENT).
+                relaxedHTTPSValidation();
+    }
+
+    private RequestSpecification UserMeSpecification(String userToken) {
+        return given().
+                baseUri("https://" + GlobalVariables.API_ENVIRONMENT).
+                header("Authorization", "Bearer " + userToken).
                 relaxedHTTPSValidation();
     }
 
@@ -43,25 +55,92 @@ public class userAPI extends RestAssuredConfiguration {
     }
 
 
-    public HashMap getUserInfo(ExtentTest logTest, String email) throws IOException {
-        HashMap userInfo = null;
+    public JSONObject getUserInfo(ExtentTest logTest, String email) throws IOException {
         try {
             RequestSpecification getUserInfoSpec = new userAPI().UserSpecification();
             getUserInfoSpec.queryParam("email", email);
             Response response = getUserInfoSpec.get("/api/user");
 
-            logInfo(logTest, "----->GET User Info - RESPONSE: " + "<br>" + response.getBody().asString());
+            jsonUserInfo = (JSONObject) jsonParser.parse(response.body().asString());
 
-            userInfo = response.then().extract().response().path("");
-            return userInfo;
+            return jsonUserInfo;
 
-        } catch (Exception e) {
+            } catch (Exception e) {
             log4j.error("getUserInfo method - ERROR: " + e);
             logException(logTest, "getUserInfo method - ERROR: ", e);
+            }
+
+        return jsonUserInfo;
+    }
+
+    public String getUserId(ExtentTest logTest, String email) throws IOException {
+        try {
+
+            userId = ((JSONObject) ((JSONObject) getUserInfo(logTest, email).get("data")).get("user")).get("_id").toString();
+
+            logInfo(logTest, "----->GET User ID: " + userId);
+
+            return userId;
+
+        } catch (Exception e) {
+            log4j.error("getUserId method - ERROR: " + e);
+            logException(logTest, "getUserId method - ERROR: ", e);
         }
 
-        return userInfo;
+        return userId;
     }
+
+    public String getUserToken(ExtentTest logTest, String email) throws IOException {
+        try {
+
+            userToken = ((JSONObject) getUserInfo(logTest, email).get("data")).get("token").toString();
+
+            logInfo(logTest, "----->GET User Token: " + userToken);
+
+            return userToken;
+
+        } catch (Exception e) {
+            log4j.error("getUserToken method - ERROR: " + e);
+            logException(logTest, "getUserToken method - ERROR: ", e);
+        }
+
+        return userToken;
+    }
+
+    public JSONObject getUserMe(ExtentTest logTest, String userToken) throws IOException {
+        try {
+            RequestSpecification getUserMeInfoSpec = new userAPI().UserMeSpecification(userToken);
+            Response response = getUserMeInfoSpec.get("/me");
+
+            jsonUserMeInfo = (JSONObject) jsonParser.parse(response.body().asString());
+
+            return jsonUserMeInfo;
+
+        } catch (Exception e) {
+            log4j.error("getUserMe method - ERROR: " + e);
+            logException(logTest, "getUserMe method - ERROR: ", e);
+        }
+
+        return jsonUserMeInfo;
+    }
+
+    public String getUserMeStatistic(ExtentTest logTest, String userToken, String statisticField) throws IOException {
+        try {
+            userStatistic = ((JSONObject) ((JSONObject) getUserMe(logTest, userToken).get("data")).get("user")).get("statistic").toString();
+            userStatistic = ((JSONObject) ((JSONObject) ((JSONObject) getUserMe(logTest, userToken).get("data")).get("user")).get("statistic")).get(statisticField).toString();
+            logInfo(logTest, "----->GET User Me Statistic: " + statisticField + " " + userStatistic);
+
+            return userStatistic;
+
+        } catch (Exception e) {
+            log4j.error("getUserMeStatistic method - ERROR: " + e);
+            logException(logTest, "getUserMeStatistic method - ERROR: ", e);
+        }
+
+        return userStatistic;
+    }
+
+
 
 //    public void verifyGetIssueResponse(String issueId, Hashtable<String, String> data, Response response, ExtentTest logTest) throws IOException, ParseException {
 //        logInfo(logTest, "verifyGetIssueResponse starts..........");
