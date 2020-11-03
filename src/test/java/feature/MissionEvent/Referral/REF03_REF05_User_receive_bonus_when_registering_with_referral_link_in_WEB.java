@@ -30,9 +30,9 @@ public class REF03_REF05_User_receive_bonus_when_registering_with_referral_link_
         if (isTestCaseExecutable && isTestDataExecutable(data, logMethod)) {
             try {
 
-//                logStep = logStepInfo(logMethod, "PRE-CONDITION: ");
-//                logInfo(logStep, "Clean user to make sure that USER account is new");
-//                userAPI.deleteUserAccount(logStep, GlobalVariables.gg_username);
+                logStep = logStepInfo(logMethod, "PRE-CONDITION: ");
+                logInfo(logStep, "Clean user to make sure that USER account is new");
+                userAPI.deleteUserAccount(logStep, GlobalVariables.gg_username);
 
                 logStep = logStepInfo(logMethod, "Step #1: Access referral link: " + CB_URL + data.get("referral_path") + referral_code);
                 navigateToTestSite(logStep, CB_URL + data.get("referral_path") + referral_code);

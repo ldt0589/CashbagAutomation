@@ -7,9 +7,7 @@
     <test name="test1">
         <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="feature.Issue.Create_Issue"/>
-            <class name="feature.Issue.Create_Issue2"/>
-            <class name="feature.Issue.Create_Issue3"/>
+            <class name="feature.MissionEvent.Referral.REF03_REF05_User_receive_bonus_when_registering_with_referral_link_in_WEB"/>
         </classes>
     </test>
 </suite>
