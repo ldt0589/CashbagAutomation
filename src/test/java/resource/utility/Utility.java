@@ -60,7 +60,8 @@ public class Utility {
     public static String timeStampString = generateTimeStampString("yyyy-MM-dd-HH-mm-ss");
 
     //Initiate local variables for sending email
-    public static String reportLocation = GlobalVariables.OUTPUT_PATH + "report-" + timeStampString + "/";
+//    public static String reportLocation = GlobalVariables.OUTPUT_PATH + "report-" + timeStampString + "/";
+    public static String reportLocation = GlobalVariables.OUTPUT_PATH + "report/";
     public static String reportFilePath = reportLocation + "report-" + timeStampString + ".html";
 
     //Variable for generate random string
