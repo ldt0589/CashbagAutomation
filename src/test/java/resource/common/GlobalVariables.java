@@ -12,7 +12,7 @@ public class GlobalVariables {
     public static String user_id = null;
 
     //CB referral INFO
-    public static String CB_referral_bonus = "Th@ng2407";
+    public static String CB_referral_bonus = "10000";
     public static String referral_code = "thang10k";
 
     //CB INFO
@@ -20,7 +20,7 @@ public class GlobalVariables {
     public static String API_ENVIRONMENT = "api.cashbagmain.com";
     public static String CB_URL = "https://cashbagmain.com";
     public static String gg_username = "cashbag.qa@gmail.com";
-    public static String gg_username2 = "cashbag.qa2@gmail.com";
+    public static String gg_username2 = "lethang05240709@gmail.com";
     public static String gg_password = "Th@ng2407";
 
     //handling window

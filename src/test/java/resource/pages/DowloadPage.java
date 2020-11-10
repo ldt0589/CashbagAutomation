@@ -12,21 +12,20 @@ import static resource.common.GlobalVariables.mainWindow;
 
 public class DowloadPage extends Utility {
 
-    //Switch to handled window after clicking action links
-    public DowloadPage() throws IOException {
-        switchToWindowHandle();
-    }
+//    Switch to handled window after clicking action links
+//    public DowloadPage() throws IOException {
+//        switchToWindowHandle();
+//    }
 
     @FindBy(xpath = "//a[contains(@href,'https://play.google.com/store/apps/details?id=vn.cashbag')]")
     private WebElement btn_AndroidDowload;
 
-    @FindBy(xpath = "//a[@href='https://apps.apple.com/us/app/cashbag']")
+    @FindBy(xpath = "//a[contains(@href,'https://apps.apple.com/us/app/cashbag')]")
     private WebElement btn_AppleDowload;
 
     public void checkButtonDowloadExists(ExtentTest logTest) throws IOException {
         try {
 
-            logInfo(logTest, "Verify that dowload page displays:");
             checkControlExist(logTest, btn_AndroidDowload, "button Android dowload");
             checkControlExist(logTest, btn_AppleDowload, "button Apple dowload");
 

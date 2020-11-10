@@ -36,6 +36,7 @@ public class userAPI extends RestAssuredConfiguration {
     private RequestSpecification UserMeSpecification(String userToken) {
         return given().
                 baseUri("https://" + GlobalVariables.API_ENVIRONMENT).
+                header("version","1.2").
                 header("Authorization", "Bearer " + userToken).
                 relaxedHTTPSValidation();
     }

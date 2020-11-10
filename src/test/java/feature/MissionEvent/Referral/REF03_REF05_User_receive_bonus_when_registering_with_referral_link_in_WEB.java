@@ -40,18 +40,18 @@ public class REF03_REF05_User_receive_bonus_when_registering_with_referral_link_
                 logStep = logStepInfo(logMethod, "Step #2: Open Sign In Google window");
                 ReferralPage = PageFactory.initElements(Utility.getDriver(), ReferralPage.class);
                 ReferralPage.openGoogleSignInWindow(logStep);
-//
+
                 logStep = logStepInfo(logMethod, "Step #3: Sign In Google Account");
                 GoogleSignInPage = PageFactory.initElements(Utility.getDriver(), GoogleSignInPage.class);
                 GoogleSignInPage.SignInAccount(gg_username, gg_password, logStep);
 
-                logStep = logStepInfo(logMethod, "Step #4: Get User Info");
-                userID = userAPI.getUserId(logStep, GlobalVariables.gg_username);
-                userToken = userAPI.getUserToken(logStep, GlobalVariables.gg_username);
-
-                logStep = logStepInfo(logMethod, "Step #5: Verify that the dowload page displays");
+                logStep = logStepInfo(logMethod, "Step #4: Verify that the dowload page displays");
                 DowloadPage = PageFactory.initElements(Utility.getDriver(), DowloadPage.class);
                 DowloadPage.checkButtonDowloadExists(logStep);
+
+                logStep = logStepInfo(logMethod, "Step #5: Get UserToken and UserId");
+                userID = userAPI.getUserId(logStep, GlobalVariables.gg_username);
+                userToken = userAPI.getUserToken(logStep, GlobalVariables.gg_username);
 
                 logStep = logStepInfo(logMethod, "Step #6: Verify that user receives referral bonus");
                 referralBonus = userAPI.getUserMeStatistic(logStep, userToken, "totalSuccessBonusCash");
