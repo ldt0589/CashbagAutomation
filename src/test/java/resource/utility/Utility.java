@@ -61,8 +61,8 @@ public class Utility {
 
     //Initiate local variables for sending email
 //    public static String reportLocation = GlobalVariables.OUTPUT_PATH + "report-" + timeStampString + "/";
-    public static String reportLocation = GlobalVariables.OUTPUT_PATH + "report/";
-    public static String reportFilePath = reportLocation + "report-" + timeStampString + ".html";
+    public static String reportLocation = GlobalVariables.OUTPUT_PATH + "report";
+    public static String reportFilePath = reportLocation + "/report-" + timeStampString + ".html";
 
     //Variable for generate random string
     static Calendar now = Calendar.getInstance();
