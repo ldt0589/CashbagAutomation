@@ -12,7 +12,7 @@ public class GlobalVariables {
     public static String user_id = null;
 
     //CB referral INFO
-    public static String CB_referral_bonus = "10000";
+    public static String CB_referral_bonus = "20000";
     public static String referral_code = "thang10k";
 
     //CB INFO
