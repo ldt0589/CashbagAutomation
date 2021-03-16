@@ -1,7 +1,6 @@
 package resource.common;
 
 public class GlobalVariables {
-
     //JIRA
     public static String JIRA_URL = "";
     public static String JIRA_USERNAME = "";
@@ -22,6 +21,11 @@ public class GlobalVariables {
     public static String gg_username = "cashbag.qa@gmail.com";
     public static String gg_username2 = "lethang05240709@gmail.com";
     public static String gg_password = "Th@ng2407";
+
+    //SELLY
+    public static String SellyEnvironment = "app-api.unibag.xyz";
+    public static String SellerId = "6012952a45f56d576a800874";
+    public static String SellerPhone = "0935321012";
 
     //handling window
     public static String mainWindow = null;
