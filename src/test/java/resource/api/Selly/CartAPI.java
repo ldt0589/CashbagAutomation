@@ -3,16 +3,16 @@ package resource.api.Selly;
 import com.aventstack.extentreports.ExtentTest;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.json.JSONArray;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import resource.api.common.RestAssuredConfiguration;
 import resource.common.GlobalVariables;
 
 import java.io.IOException;
-import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
 
@@ -23,171 +23,136 @@ public class CartAPI extends RestAssuredConfiguration {
     private JSONObject jsonExpected = null;
     private JSONObject jsonUser = null;
     private JSONObject jsonProductDetail = null;
-    private String itemObjects = null;
-    private org.json.JSONObject itemObject = null;
+    private JSONObject jsonCartItemsDetail = null;
+    private JSONObject response = null;
+    private JSONArray itemArray = null;
     private String userStatistic = null;
     private String userId = null;
     private String skuID = null;
     private String skuCode = null;
+    private String inventoryID = null;
+    private String inventoryName = null;
+    private int i = 0;
+    ArrayList<String> itemIDList = new ArrayList<String>();
+    ArrayList<String> itemMarketPriceList = new ArrayList<String>();
+    ArrayList<String> itemCodeList = new ArrayList<String>();
 
 
-    private RequestSpecification UserSpecification() {
-        return given().
-                baseUri("https://" + GlobalVariables.SellyEnvironment).
-                relaxedHTTPSValidation();
-    }
-
-    private RequestSpecification ProductSpecification(String userToken) {
+    private RequestSpecification ItemSpecification(String userToken) {
         return given().
                 baseUri("https://" + GlobalVariables.SellyEnvironment).
                 header("Authorization", "Bearer " + userToken).
                 relaxedHTTPSValidation();
     }
 
-//    public void deleteUserAccount(ExtentTest logTest, String email) throws IOException {
-//        Response response = null;
-//        logInfo(logTest, "----->Delete userAPI account: " + email);
-//
-//        RequestSpecification deleteUserSpec = new userAPI().UserSpecification();
-//        deleteUserSpec.queryParam("email", email);
-//        response = deleteUserSpec.delete("/api/user");
-//
-////        logInfo(logTest, "----->Delete User Account - RESPONSE: " + "<br>" + response.getBody().asString());
-//
-//        handleResponseStatusCode(response, 200, logTest);
-//
-//    }
-
-
-//    public JSONObject getUserInfo(ExtentTest logTest, String email) throws IOException {
-//        try {
-//            RequestSpecification getUserInfoSpec = new userAPI().UserSpecification();
-//            getUserInfoSpec.queryParam("email", email);
-//            Response response = getUserInfoSpec.get("/api/user");
-//
-//            jsonUserInfo = (JSONObject) jsonParser.parse(response.body().asString());
-//
-//            return jsonUserInfo;
-//
-//            } catch (Exception e) {
-//            log4j.error("getUserInfo method - ERROR: " + e);
-//            logException(logTest, "getUserInfo method - ERROR: ", e);
-//            }
-//
-//        return jsonUserInfo;
-//    }
-
-    public void getSkuID(ExtentTest logTest, String sellerToken, String productID) throws IOException {
-        try {
-//
-//            JSONObject itemObjects = ((JSONObject) ((JSONObject) getProductDetail(logTest, sellerToken, productID).get("data")).get("items"));
-//            List<T> itemList = new ArrayList<>();
-            itemObjects = ((JSONObject) getProductDetail(logTest, sellerToken, productID).get("data")).get("items").toString();
-
-            JSONArray itemArray = new JSONArray(itemObjects);
-            for (int i = 0; i < itemArray.length(); i++) {
-                itemObject = itemArray.getJSONObject(i);
-//                String SKUID = itemObject.getString("_id");
-//                String url = itemObject.getString("sku");
-                logInfo(logTest, "----->SKU ID: " + itemObject.getString("_id"));
-                logInfo(logTest, "----->SKU Code: " + itemObject.getString("sku"));
-
-            }
-//
-////                skuID = ((JSONObject) ((JSONObject) getProductDetail(logTest, sellerToken, productID).get("data")).get("items")).get("_id").toString();
-//
-
-//
-//            return itemObjects;
-//
-        } catch (Exception e) {
-            log4j.error("getSkuID method - ERROR: " + e);
-            logException(logTest, "getSkuID method - ERROR: ", e);
-        }
-//
-//        return itemObjects;
+    private RequestSpecification addToCartSpecification(String userToken) {
+        return given().
+                baseUri("https://" + GlobalVariables.SellyEnvironment).
+                header("Authorization", "Bearer " + userToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
     }
 
-    public JSONObject getProductDetail(ExtentTest logTest, String sellerToken, String productID) throws IOException {
+//    private RequestSpecification getItemsCartSpecification(String userToken) {
+//        return given().
+//                baseUri("https://" + GlobalVariables.SellyEnvironment).
+//                header("Authorization", "Bearer " + userToken).
+//                relaxedHTTPSValidation();
+//    }
+
+    public void clearItemsInCart(ExtentTest logTest, String sellerToken) throws IOException {
         try {
-            RequestSpecification getProductDetailSpec = this.ProductSpecification(sellerToken);
+
+            itemArray = getItemsInCart(logTest, sellerToken);
+
+
+
+//            return itemArray;
+
+        }catch (Exception e) {
+            log4j.error("clearItemsInCart method - ERROR: " + e);
+            logException(logTest, "clearItemsInCart method - ERROR: ", e);
+        }
+//        return itemArray;
+    }
+
+    public JSONArray getItemsInCart(ExtentTest logTest, String sellerToken) throws IOException {
+        try {
+            RequestSpecification getCartItemlSpec = this.ItemSpecification(sellerToken);
+            Response response = getCartItemlSpec.get("/cart/items");
+
+            jsonCartItemsDetail = (JSONObject) jsonParser.parse(response.body().asString());
+
+            itemArray = (JSONArray) ((JSONObject) jsonCartItemsDetail.get("data")).get("cart");
+
+            return itemArray;
+
+            }catch (Exception e) {
+            log4j.error("getItemsInCart method - ERROR: " + e);
+            logException(logTest, "getItemsInCart method - ERROR: ", e);
+        }
+        return itemArray;
+    }
+
+    public void addItemIntoCart(ExtentTest logTest, String sellerToken, String productID) throws IOException {
+        try {
+
+            itemArray = getItemsInProduct(logTest, sellerToken, productID);
+
+            for(int i=0; i < itemArray.size(); i++){
+                JSONObject itemObject = (JSONObject)itemArray.get(i);
+                String skuID = (String) itemObject.get("_id");
+                String skuCode = (String) itemObject.get("sku");
+                inventoryID = ((JSONObject) ((JSONObject) itemObject.get("info")).get("inventory")).get("id").toString();
+                inventoryName = ((JSONObject)((JSONObject) itemObject.get("info")).get("inventory")).get("name").toString();
+                String skuMarketPrice = ((JSONObject) itemObject.get("price")).get("market").toString();
+                itemIDList.add(skuID);
+                itemMarketPriceList.add(skuMarketPrice);
+                itemCodeList.add(skuCode);
+            }
+            logInfo(logTest, "-----> INVENTORY ID: " + inventoryID + " && INVENTORY NAME: " + inventoryName + " <-------");
+            for(; i < itemIDList.size(); i++){
+                logInfo(logTest, "-----> " + i + ". SKU Code: " + itemCodeList.get(i));
+                logInfo(logTest, "-----> " + i + ". SKU ID: " + itemIDList.get(i));
+                logInfo(logTest, "-----> " + i + ". Market Price: " + itemMarketPriceList.get(i) + " đ");
+
+                RequestSpecification addItemToCartSpec = this.addToCartSpecification(sellerToken);
+
+                addItemToCartSpec.body(new HashMap<String, Object>() {{
+                    put("priceSell", Integer.parseInt(itemMarketPriceList.get(i)));
+                    put("quantity", 1);
+                    put("skuId", itemIDList.get(i));
+                }}).log().all();
+
+                Response response = addItemToCartSpec.post("/cart/items");
+                handleResponseStatusCode(response, 200, logTest);
+
+            }
+
+        } catch (Exception e) {
+            log4j.error("addItemIntoCart method - ERROR: " + e);
+            logException(logTest, "addItemIntoCart method - ERROR: ", e);
+        }
+    }
+
+    public JSONArray getItemsInProduct(ExtentTest logTest, String sellerToken, String productID) throws IOException {
+        try {
+            RequestSpecification getProductDetailSpec = this.ItemSpecification(sellerToken);
             Response response = getProductDetailSpec.get("/products/" + productID);
 
             jsonProductDetail = (JSONObject) jsonParser.parse(response.body().asString());
 
-            return jsonProductDetail;
+            itemArray = (JSONArray)((JSONObject)((JSONObject) jsonProductDetail.get("data")).get("product")).get("items");
+
+            return itemArray;
 
         } catch (Exception e) {
             log4j.error("getProductDetail method - ERROR: " + e);
             logException(logTest, "getProductDetail method - ERROR: ", e);
         }
 
-        return jsonProductDetail;
+        return itemArray;
     }
-
-    //    public JSONObject getSellerInfo(ExtentTest logTest, String userId) throws IOException {
-//        try {
-//            RequestSpecification getSellerInfoSpec = this.UserSpecification();
-//            getSellerInfoSpec.queryParam("userId", userId);
-//            Response response = getSellerInfoSpec.get("/users/token");
-//
-//            jsonUser = (JSONObject) jsonParser.parse(response.body().asString());
-//
-//            return jsonUser;
-//
-//            } catch (Exception e) {
-//            log4j.error("getSellerInfo method - ERROR: " + e);
-//            logException(logTest, "getSellerInfo method - ERROR: ", e);
-//        }
-//
-//        return jsonUser;
-//    }
-
-//    public String getUserMeStatistic(ExtentTest logTest, String userToken, String statisticField) throws IOException {
-//        try {
-//            userStatistic = ((JSONObject) ((JSONObject) getUserMe(logTest, userToken).get("data")).get("user")).get("statistic").toString();
-//            userStatistic = ((JSONObject) ((JSONObject) ((JSONObject) getUserMe(logTest, userToken).get("data")).get("user")).get("statistic")).get(statisticField).toString();
-//            logInfo(logTest, "----->GET User Me Statistic: " + statisticField + " " + userStatistic);
-//
-//            return userStatistic;
-//
-//        } catch (Exception e) {
-//            log4j.error("getUserMeStatistic method - ERROR: " + e);
-//            logException(logTest, "getUserMeStatistic method - ERROR: ", e);
-//        }
-//
-//        return userStatistic;
-//    }
-
-
-
-//    public void verifyGetIssueResponse(String issueId, Hashtable<String, String> data, Response response, ExtentTest logTest) throws IOException, ParseException {
-//        logInfo(logTest, "verifyGetIssueResponse starts..........");
-//        log4j.info("verifyGetIssueResponse starts..........");
-//
-//        if (response.getStatusCode() == 200) {
-//            logPass(logTest, "API calling successful. Status code response is  200");
-//
-//            jsonActual = (JSONObject) jsonParser.parse(response.body().asString());
-//
-//            logInfo(logTest, "Verify the response is not empty");
-//            verifyActualIsNotEmptyResults(logTest, jsonActual.get("key").toString());
-//
-//            String actualIssueId = jsonActual.get("key").toString();
-//            String actualIssueType = ((JSONObject) ((JSONObject) jsonActual.get("fields")).get("issuetype")).get("name").toString();
-//            String actualIssueSummary = ((JSONObject) jsonActual.get("fields")).get("summary").toString();
-//
-//            verifyExpectedAndActualResults(logTest, issueId, actualIssueId);
-//            verifyExpectedAndActualResults(logTest, data.get("IssueType"), actualIssueType);
-//            verifyExpectedAndActualResults(logTest, data.get("IssueSummary"), actualIssueSummary);
-//        }
-//        else
-//            logFail(logTest, "API calling was unsuccessful: Status code response is " + response.getStatusCode() + " instead of 200");
-//
-//
-//
-//        logInfo(logTest, "verifyGetIssueResponse ends..........");
-//        log4j.info("verifyGetIssueResponse ends..........");
-//    }
 
 }

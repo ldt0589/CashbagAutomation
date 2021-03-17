@@ -1,15 +1,15 @@
 package feature.Selly;
 
 import org.testng.annotations.Test;
-import resource.api.Selly.UserAPI;
 import resource.api.Selly.CartAPI;
+import resource.api.Selly.UserAPI;
 import resource.common.GlobalVariables;
 import resource.common.TestBase;
 
 import java.io.IOException;
 import java.util.Hashtable;
 
-public class Add_to_Cart extends TestBase {
+public class Clear_Items_in_Cart extends TestBase {
 
     private resource.api.Selly.CartAPI CartAPI = new CartAPI();
     private String sellerToken = null;
