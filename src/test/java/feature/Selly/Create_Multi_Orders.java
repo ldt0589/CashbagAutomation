@@ -1,19 +1,21 @@
 package feature.Selly;
 
 import org.testng.annotations.Test;
-import resource.api.Selly.UserAPI;
 import resource.api.Selly.CartAPI;
+import resource.api.Selly.OrderAPI;
+import resource.api.Selly.UserAPI;
 import resource.common.GlobalVariables;
 import resource.common.TestBase;
 
 import java.io.IOException;
 import java.util.Hashtable;
 
-public class Add_to_Cart extends TestBase {
+public class Create_Multi_Orders extends TestBase {
 
-    private CartAPI CartAPI = new CartAPI();
     private String sellerToken = null;
     private UserAPI userAPI = new UserAPI();
+    private CartAPI CartAPI = new CartAPI();
+    private OrderAPI OrderAPI = new OrderAPI();
 
     @Test(dataProvider = "getDataForTest", priority = 1, description = "Add multi items into Cart")
     public void TC01(Hashtable<String, String> data) throws IOException {
@@ -30,11 +32,20 @@ public class Add_to_Cart extends TestBase {
             CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Zody"));
             CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Zody2"));
             CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Unibag"));
-            CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_DaNang"));
-            CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Cashbag"));
+            CartAPI.addItemIntoCart(logStep, sellerToken, data .get("ProductID_Cashbag"));
+
+            logStep = logStepInfo(logMethod, "Step #4: Create Multiple Session Order");
+            OrderAPI.createMultiSessionOrder(logStep, sellerToken);
+
+            logStep = logStepInfo(logMethod, "Step #5: Create Delivery Session Order");
+
+            logStep = logStepInfo(logMethod, "Step #6: Create Multiple Order");
+
+
+
 
         } catch (Exception e) {
-            log4j.error(getStackTrade(e.getStackTrace()));
+            log4j.error(getStackTrade(e.getStackTrace())) ;
             logException(logMethod, testCaseName, e);
         }
 

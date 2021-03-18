@@ -9,6 +9,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import resource.api.common.RestAssuredConfiguration;
 import resource.common.GlobalVariables;
+import resource.common.TestBase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 
 import static io.restassured.RestAssured.given;
 
-public class CartAPI extends RestAssuredConfiguration {
+public class CartAPI extends TestBase {
     private String issueIdPath = "/{issueId}";
 
     private JSONParser jsonParser = new JSONParser();
@@ -33,10 +34,7 @@ public class CartAPI extends RestAssuredConfiguration {
     private String inventoryID = null;
     private String inventoryName = null;
     private int i = 0;
-    ArrayList<String> itemIDList = new ArrayList<String>();
-    ArrayList<String> itemMarketPriceList = new ArrayList<String>();
-    ArrayList<String> itemCodeList = new ArrayList<String>();
-
+    private int y = 0;
 
     private RequestSpecification ItemSpecification(String userToken) {
         return given().
@@ -53,7 +51,6 @@ public class CartAPI extends RestAssuredConfiguration {
                 contentType("application/json").
                 relaxedHTTPSValidation();
     }
-
 //    private RequestSpecification getItemsCartSpecification(String userToken) {
 //        return given().
 //                baseUri("https://" + GlobalVariables.SellyEnvironment).
@@ -65,22 +62,41 @@ public class CartAPI extends RestAssuredConfiguration {
         try {
 
             itemArray = getItemsInCart(logTest, sellerToken);
+            ArrayList<String> inventoryList = new ArrayList<String>();
 
+            if (itemArray.size() < 1)
+                logInfo(logTest, "-----> CART IS EMPTY -----");
+            else {
+                for(i = 0; i < itemArray.size(); i++){
+                    JSONObject inventoryObject = (JSONObject) itemArray.get(i);
+                    inventoryID = ((JSONObject) inventoryObject.get("inventory")).get("id").toString();
+                    inventoryList.add(inventoryID);
+                }
 
+                for(y = 0; y < itemArray.size(); y++){
+                    logInfo(logTest, "-----> " + y + ". Delete Inventory ID: " + inventoryList.get(y));
+                    RequestSpecification clearItemsSpec = this.ItemSpecification(sellerToken);
+                    clearItemsSpec.queryParam("inventoryID", inventoryList.get(y));
+                    Response response = clearItemsSpec.delete("/cart/items");
+                    clearItemsSpec.log().all();
+                    logInfo(logTest, "-----> clearItemsInCart Response Body: " + response.getBody().asString());
+                }
+            }
 
-//            return itemArray;
 
         }catch (Exception e) {
             log4j.error("clearItemsInCart method - ERROR: " + e);
             logException(logTest, "clearItemsInCart method - ERROR: ", e);
         }
-//        return itemArray;
+
     }
 
     public JSONArray getItemsInCart(ExtentTest logTest, String sellerToken) throws IOException {
         try {
             RequestSpecification getCartItemlSpec = this.ItemSpecification(sellerToken);
             Response response = getCartItemlSpec.get("/cart/items");
+
+            logInfo(logTest, "-----> getItemsInCart Response Body: " + response.getBody().asString());
 
             jsonCartItemsDetail = (JSONObject) jsonParser.parse(response.body().asString());
 
@@ -98,9 +114,13 @@ public class CartAPI extends RestAssuredConfiguration {
     public void addItemIntoCart(ExtentTest logTest, String sellerToken, String productID) throws IOException {
         try {
 
+            ArrayList<String> itemIDList = new ArrayList<String>();
+            ArrayList<String> itemMarketPriceList = new ArrayList<String>();
+            ArrayList<String> itemCodeList = new ArrayList<String>();
+
             itemArray = getItemsInProduct(logTest, sellerToken, productID);
 
-            for(int i=0; i < itemArray.size(); i++){
+            for(i=0; i < itemArray.size(); i++){
                 JSONObject itemObject = (JSONObject)itemArray.get(i);
                 String skuID = (String) itemObject.get("_id");
                 String skuCode = (String) itemObject.get("sku");
@@ -112,21 +132,20 @@ public class CartAPI extends RestAssuredConfiguration {
                 itemCodeList.add(skuCode);
             }
             logInfo(logTest, "-----> INVENTORY ID: " + inventoryID + " && INVENTORY NAME: " + inventoryName + " <-------");
-            for(; i < itemIDList.size(); i++){
-                logInfo(logTest, "-----> " + i + ". SKU Code: " + itemCodeList.get(i));
-                logInfo(logTest, "-----> " + i + ". SKU ID: " + itemIDList.get(i));
-                logInfo(logTest, "-----> " + i + ". Market Price: " + itemMarketPriceList.get(i) + " đ");
-
-                RequestSpecification addItemToCartSpec = this.addToCartSpecification(sellerToken);
+            RequestSpecification addItemToCartSpec = this.addToCartSpecification(sellerToken);
+            for(y = 0; y < itemIDList.size(); y++){
+                logInfo(logTest, "-----> " + y + ". SKU Code: " + itemCodeList.get(y));
+                logInfo(logTest, "-----> " + y + ". SKU ID: " + itemIDList.get(y));
+                logInfo(logTest, "-----> " + y + ". Market Price: " + itemMarketPriceList.get(y) + " đ");
 
                 addItemToCartSpec.body(new HashMap<String, Object>() {{
-                    put("priceSell", Integer.parseInt(itemMarketPriceList.get(i)));
+                    put("priceSell", Integer.parseInt(itemMarketPriceList.get(y)));
                     put("quantity", 1);
-                    put("skuId", itemIDList.get(i));
+                    put("skuId", itemIDList.get(y));
                 }}).log().all();
 
                 Response response = addItemToCartSpec.post("/cart/items");
-                handleResponseStatusCode(response, 200, logTest);
+                logInfo(logTest, "-----> addItemIntoCart Response Body: " + response.getBody().asString());
 
             }
 
@@ -140,6 +159,8 @@ public class CartAPI extends RestAssuredConfiguration {
         try {
             RequestSpecification getProductDetailSpec = this.ItemSpecification(sellerToken);
             Response response = getProductDetailSpec.get("/products/" + productID);
+
+            logInfo(logTest, "-----> getItemsInProduct Response Body: " + response.getBody().asString());
 
             jsonProductDetail = (JSONObject) jsonParser.parse(response.body().asString());
 
