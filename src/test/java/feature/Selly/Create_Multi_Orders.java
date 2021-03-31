@@ -34,15 +34,8 @@ public class Create_Multi_Orders extends TestBase {
             CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Unibag"));
             CartAPI.addItemIntoCart(logStep, sellerToken, data .get("ProductID_Cashbag"));
 
-            logStep = logStepInfo(logMethod, "Step #4: Create Multiple Session Order");
-            OrderAPI.createMultiSessionOrder(logStep, sellerToken);
-
-            logStep = logStepInfo(logMethod, "Step #5: Create Delivery Session Order");
-
-            logStep = logStepInfo(logMethod, "Step #6: Create Multiple Order");
-
-
-
+            logStep = logStepInfo(logMethod, "Step #4: Create Multiple Order");
+            OrderAPI.createMultiOrder(logStep, sellerToken);
 
         } catch (Exception e) {
             log4j.error(getStackTrade(e.getStackTrace())) ;

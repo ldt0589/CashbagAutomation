@@ -209,7 +209,7 @@ public class TestBase extends Utility {
             logMethod.assignCategory(dataTest.get("TestingType"));
 
             // Start web driver
-//            initializeDriver(logMethod);
+            initializeDriver(logMethod);
 
             log4j.info("beforeMethod method - End");
         }

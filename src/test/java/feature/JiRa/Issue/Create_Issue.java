@@ -1,4 +1,4 @@
-package feature.Issue;
+package feature.JiRa.Issue;
 
 import resource.api.IssueApi;
 import resource.common.TestBase;
@@ -18,6 +18,7 @@ public class Create_Issue extends TestBase {
     private JiraIssuePage jiraIssuePage = null;
     private Response response;
     private IssueApi issueApi = new IssueApi();
+    public String issueID = null;
 
     @Test(dataProvider = "getDataForTest", priority = 1, description = "Create an Issue on Jira")
     public void TC01(Hashtable<String, String> data) throws IOException {
@@ -39,8 +40,9 @@ public class Create_Issue extends TestBase {
                 jiraIssuePage.checkSuccessfulMsgDisplay(logStep);
 
                 logStep = logStepInfo(logMethod, "Step #4: Verify that the issue is created successfully");
-                response = issueApi.getIssueAPI(logStep, jiraIssuePage.getIssueId(logStep));
-                issueApi.verifyGetIssueResponse(jiraIssuePage.getIssueId(logStep), data, response, logStep);
+                issueID = jiraIssuePage.getIssueId(logStep);
+                response = issueApi.getIssueDetail(logStep, issueID);
+                issueApi.verifyGetIssueResponse(issueID, data, response, logStep);
 
             } catch (Exception e) {
                     log4j.error(getStackTrade(e.getStackTrace()));

@@ -1,16 +1,21 @@
 package resource.api.Selly;
 
 import com.aventstack.extentreports.ExtentTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import resource.api.common.RestAssuredConfiguration;
+import resource.api.common.RestAssuredConfiguration.*;
 import resource.common.GlobalVariables;
 import resource.common.TestBase;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +26,7 @@ public class CartAPI extends TestBase {
     private String issueIdPath = "/{issueId}";
 
     private JSONParser jsonParser = new JSONParser();
+    private RestAssuredConfig restConfig = new RestAssuredConfig();
     private JSONObject jsonExpected = null;
     private JSONObject jsonUser = null;
     private JSONObject jsonProductDetail = null;
@@ -35,12 +41,14 @@ public class CartAPI extends TestBase {
     private String inventoryName = null;
     private int i = 0;
     private int y = 0;
+    private static FileWriter file;
 
     private RequestSpecification ItemSpecification(String userToken) {
         return given().
                 baseUri("https://" + GlobalVariables.SellyEnvironment).
                 header("Authorization", "Bearer " + userToken).
                 relaxedHTTPSValidation();
+
     }
 
     private RequestSpecification addToCartSpecification(String userToken) {
@@ -49,6 +57,7 @@ public class CartAPI extends TestBase {
                 header("Authorization", "Bearer " + userToken).
                 header("Content-Type","application/json").
                 contentType("application/json").
+//                log().ifValidationFails().
                 relaxedHTTPSValidation();
     }
 //    private RequestSpecification getItemsCartSpecification(String userToken) {
@@ -90,6 +99,8 @@ public class CartAPI extends TestBase {
         }
 
     }
+
+
 
     public JSONArray getItemsInCart(ExtentTest logTest, String sellerToken) throws IOException {
         try {
@@ -155,6 +166,21 @@ public class CartAPI extends TestBase {
         }
     }
 
+    public void writeJsonFile(ExtentTest logTest, JSONObject fileObject, String filePath) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(filePath), fileObject);
+            logInfo(logTest, "Successfully Wrote JSON Object to File...");
+            logInfo(logTest, "JSON Object: " + fileObject);
+
+        } catch (Exception e) {
+            log4j.error("writeJsonFile method - ERROR: " + e);
+            logException(logTest, "writeJsonFile method - ERROR: ", e);
+        }
+    }
+
     public JSONArray getItemsInProduct(ExtentTest logTest, String sellerToken, String productID) throws IOException {
         try {
             RequestSpecification getProductDetailSpec = this.ItemSpecification(sellerToken);
@@ -164,7 +190,34 @@ public class CartAPI extends TestBase {
 
             jsonProductDetail = (JSONObject) jsonParser.parse(response.body().asString());
 
+            JSONObject productdetailObject = (JSONObject)((JSONObject) jsonProductDetail.get("data")).get("product");
+            String productInventory = (String) ((JSONObject)((JSONObject) productdetailObject.get("info")).get("inventory")).get("name");
             itemArray = (JSONArray)((JSONObject)((JSONObject) jsonProductDetail.get("data")).get("product")).get("items");
+
+            switch (productInventory) {
+                case "Selly":
+                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Selly_Inventory_Json_file);
+                    break;
+                case "Zody":
+                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Zody_Inventory_Json_file);
+                    break;
+                case "Cashbag":
+                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Cashbag_Inventory_Json_file);
+                    break;
+                case "Unibag":
+                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Unibag_Inventory_Json_file);
+                    break;
+                case "DaNang":
+                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_DaNang_Inventory_Json_file);
+                    break;
+                case "HCM":
+                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_HCM_Inventory_Json_file);
+                    break;
+                default:
+                    logInfo(logTest, "-----> No Inventory here");
+            }
+
+            writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Selly_Inventory_Json_file);
 
             return itemArray;
 

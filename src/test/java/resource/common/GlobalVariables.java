@@ -2,9 +2,11 @@ package resource.common;
 
 public class GlobalVariables {
     //JIRA
-    public static String JIRA_URL = "";
-    public static String JIRA_USERNAME = "";
-    public static String JIRA_PASSWORD = "";
+    public static String JIRA_URL = "https://lethang052407.atlassian.net";
+    public static String JIRA_DOMAIN = "https://lethang052407";
+    public static String JIRA_USERNAME = "lethang052407@gmail.com";
+    public static String JIRA_TOKEN = "yxbZgQUQIWpxm1IPiDrA1ABA";
+    public static String JIRA_PASSWORD = "Th@ng2407";
 
     //CB User INFO
     public static String user_token = null;
@@ -26,6 +28,7 @@ public class GlobalVariables {
     public static String SellyEnvironment = "app-api.unibag.xyz";
     public static String SellerId = "6012952a45f56d576a800874";
     public static String SellerPhone = "0935321012";
+
 
     //handling window
     public static String mainWindow = null;
@@ -64,6 +67,15 @@ public class GlobalVariables {
     public static final String PROJECT_PATH = System.getProperty("user.dir");
     public static final String RESOURCES_PATH = PROJECT_PATH + "/src/main/resources/";
     public static final String OUTPUT_PATH = PROJECT_PATH + "/src/main/resources/output/";
+
+    //JSON FILE PATH
+    public static final String create_multi_delivery_payload = PROJECT_PATH + "/src/test/java/resource/payload_templates/Selly/create_delivery_session_multiple_payload.json";
+    public static final String Product_In_Selly_Inventory_Json_file = PROJECT_PATH + "/src/test/java/resource/product_detail/Product_in_Selly_Inventory.json";
+    public static final String Product_In_Cashbag_Inventory_Json_file = PROJECT_PATH + "/src/test/java/resource/product_detail/Product_in_Cashbag_Inventory.json";
+    public static final String Product_In_Zody_Inventory_Json_file = PROJECT_PATH + "/src/test/java/resource/product_detail/Product_in_Zody_Inventory.json";
+    public static final String Product_In_Unibag_Inventory_Json_file = PROJECT_PATH + "/src/test/java/resource/product_detail/Product_in_Unibag_Inventory.json";
+    public static final String Product_In_HCM_Inventory_Json_file = PROJECT_PATH + "/src/test/java/resource/product_detail/Product_in_HCM_Inventory.json";
+    public static final String Product_In_DaNang_Inventory_Json_file = PROJECT_PATH + "/src/test/java/resource/product_detail/Product_in_DaNang_Inventory.json";
 
     //OS name
     public static final String OS_NAME = System.getProperty("os.name").toLowerCase();

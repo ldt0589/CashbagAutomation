@@ -1,0 +1,8 @@
+{
+  "checkSum": "%s",
+  "customer": {
+    "id": "%s",
+    "location": "%s"
+  },
+  "sessionOrders": ["{sessionOrders}"]
+}

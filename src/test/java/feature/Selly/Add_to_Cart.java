@@ -28,10 +28,10 @@ public class Add_to_Cart extends TestBase {
             logStep = logStepInfo(logMethod, "Step #3: Add multi items into Cart");
             CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Selly"));
             CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Zody"));
-            CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Zody2"));
+//            CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Zody2"));
             CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Unibag"));
-            CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_DaNang"));
-            CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Cashbag"));
+//            CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_DaNang"));
+//            CartAPI.addItemIntoCart(logStep, sellerToken, data.get("ProductID_Cashbag   "));
 
         } catch (Exception e) {
             log4j.error(getStackTrade(e.getStackTrace()));

@@ -1,0 +1,173 @@
+{
+  "guides" : [ {
+    "icon" : {
+      "name" : "598792263026_1610191227041.png",
+      "_id" : "5ff9917bbc66575a849298c4",
+      "dimensions" : {
+        "md" : {
+          "width" : 140,
+          "url" : "https://cdn.unibag.vn/md_598792263026_1610191227041.png",
+          "height" : 140
+        },
+        "sm" : {
+          "width" : 70,
+          "url" : "https://cdn.unibag.vn/sm_598792263026_1610191227041.png",
+          "height" : 70
+        }
+      }
+    },
+    "_id" : "5fe2f183d47bedf3deb759fd",
+    "title" : "Đảm bảo chất lượng"
+  }, {
+    "icon" : {
+      "name" : "471678414204_1610191255334.png",
+      "_id" : "5ff99197bc66574ba99298c6",
+      "dimensions" : {
+        "md" : {
+          "width" : 140,
+          "url" : "https://cdn.unibag.vn/md_471678414204_1610191255334.png",
+          "height" : 140
+        },
+        "sm" : {
+          "width" : 70,
+          "url" : "https://cdn.unibag.vn/sm_471678414204_1610191255334.png",
+          "height" : 70
+        }
+      }
+    },
+    "_id" : "5ff991990cec09d5d677bfde",
+    "title" : "Giao hàng từ 1-3 ngày"
+  } ],
+  "name" : "Sản phẩm - Kho Unibag",
+  "_id" : "605ae1256c8e418a9f798048",
+  "shareDesc" : "Sản phẩm - Kho Unibag",
+  "shareImages" : [ "https://cdn.unibag.vn/md_558344734256_1616568664853.jpg" ],
+  "photos" : [ {
+    "name" : "558344734256_1616568664853.jpg",
+    "_id" : "605ae159b94a6a927ff7f133",
+    "dimensions" : {
+      "md" : {
+        "width" : 1200,
+        "url" : "https://cdn.unibag.vn/md_558344734256_1616568664853.jpg",
+        "height" : 1800
+      },
+      "sm" : {
+        "width" : 561,
+        "url" : "https://cdn.unibag.vn/sm_558344734256_1616568664853.jpg",
+        "height" : 842
+      }
+    }
+  } ],
+  "items" : [ {
+    "price" : {
+      "market" : 150000,
+      "supplier" : 75000,
+      "maximum" : 150000,
+      "minimum" : 127500,
+      "profit" : 30000,
+      "base" : 120000
+    },
+    "hasWishList" : false,
+    "display" : false,
+    "name" : "Chà bông nấm hương rong biển 50g",
+    "_id" : "605ae13d6c8e418a9f7985f2",
+    "sku" : "skuUnibag",
+    "properties" : [ {
+      "name" : "Model",
+      "_id" : "6049e347ee19827c7b700ea3",
+      "value" : {
+        "name" : "Loại 1 đôi",
+        "_id" : "6049e35bee19827c7b700ea6"
+      }
+    }, {
+      "name" : "Chiết xuất",
+      "_id" : "605846736c2dc585e68f65eb",
+      "value" : {
+        "name" : "Hoa Coton",
+        "_id" : "6058472e6c2dc585e68f664d"
+      }
+    }, {
+      "name" : "Họa tiết ",
+      "_id" : "60487698210ba9c2c81ec164",
+      "value" : {
+        "name" : "Chim xanh",
+        "_id" : "604876c7210ba9c2c81ec1c6"
+      }
+    } ],
+    "picture" : "https://selly-ims-develop.s3-ap-southeast-1.amazonaws.com/md_957558876556_1616488064319.jpg",
+    "info" : {
+      "weight" : "50 grams",
+      "inventory" : {
+        "name" : "Unibag",
+        "id" : 49,
+        "_id" : "605ac8480e6926a2abe41c44"
+      },
+      "dimension" : "10x5 (cm)"
+    },
+    "isOutOfStock" : false
+  }, {
+    "price" : {
+      "market" : 150000,
+      "supplier" : 75000,
+      "maximum" : 150000,
+      "minimum" : 127500,
+      "profit" : 30000,
+      "base" : 120000
+    },
+    "hasWishList" : false,
+    "display" : true,
+    "name" : "Bột rau má Bamboo nguyên chất",
+    "_id" : "605ae14b6c8e418a9f7985f5",
+    "sku" : "skuUnibag02",
+    "properties" : [ {
+      "name" : "Họa tiết ",
+      "_id" : "60487698210ba9c2c81ec164",
+      "value" : {
+        "name" : "Công trắng",
+        "_id" : "604876c7210ba9c2c81ec1c8"
+      }
+    }, {
+      "name" : "Chiết xuất",
+      "_id" : "605846736c2dc585e68f65eb",
+      "value" : {
+        "name" : "Dầu Argan Organic",
+        "_id" : "6058472e6c2dc585e68f664e"
+      }
+    }, {
+      "name" : "Model",
+      "_id" : "6049e347ee19827c7b700ea3",
+      "value" : {
+        "name" : "Loại 1 đôi",
+        "_id" : "6049e35bee19827c7b700ea6"
+      }
+    } ],
+    "picture" : "https://selly-ims-develop.s3-ap-southeast-1.amazonaws.com/md_248348862875_1616488063473.jpg",
+    "info" : {
+      "weight" : "300 grams",
+      "inventory" : {
+        "name" : "Unibag",
+        "id" : 49,
+        "_id" : "605ac8480e6926a2abe41c44"
+      },
+      "dimension" : "10X20 (cm)"
+    },
+    "isOutOfStock" : false
+  } ],
+  "desc" : "<p>Sản phẩm - Kho UnibagSản phẩm - Kho UnibagSản phẩm - Kho Unibag</p>",
+  "info" : {
+    "supplier" : {
+      "name" : "Bamboo",
+      "_id" : "6059a67e825c94a0f6a1cb7f"
+    },
+    "category" : {
+      "name" : "Unibag Categories",
+      "_id" : "6059a67e825c94a0f6a1cb80"
+    },
+    "inventory" : {
+      "name" : "Unibag",
+      "id" : 49,
+      "_id" : "605ac8480e6926a2abe41c44"
+    },
+    "profit" : 30000
+  }
+}

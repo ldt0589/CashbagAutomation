@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 import static io.restassured.RestAssured.given;
+import static resource.common.GlobalVariables.*;
+
 
 public class IssueApi extends Utility {
     private String issueIdPath = "/{issueId}";
@@ -21,20 +23,20 @@ public class IssueApi extends Utility {
     private JSONObject jsonExpected = null;
     private JSONObject jsonActual = null;
 
-    private RequestSpecification IssueSpecification() {
+    private RequestSpecification IssueSpecification(String JiRaName, String JiRaToken) {
         return given().
-                baseUri("http://" + GlobalVariables.ENVIRONMENT + ".atlassian.net").
+                baseUri("http://" + GlobalVariables.JIRA_DOMAIN + ".atlassian.net").
                 basePath("/rest/api/2/issue").
                 relaxedHTTPSValidation().
                 contentType("application/json").
-                auth().preemptive().basic("tl31633@gmail.com", "EYhimdfdOOVEbLk5iRTz952F");
+                auth().preemptive().basic(JiRaName, JiRaToken);
     }
 
-    public Response getIssueAPI(ExtentTest logTest, String issueId) {
+    public Response getIssueDetail(ExtentTest logTest, String issueId) {
         logInfo(logTest, "callgetIssueAPI starts..........");
         log4j.info("callgetIssueAPI starts..........");
 
-        RequestSpecification requestSpecification = IssueSpecification();
+        RequestSpecification requestSpecification = this.IssueSpecification(GlobalVariables.JIRA_USERNAME, GlobalVariables.JIRA_TOKEN);
 //        requestSpecification.pathParam("issueId", issueId);
         Response response = requestSpecification.get(issueId);
 

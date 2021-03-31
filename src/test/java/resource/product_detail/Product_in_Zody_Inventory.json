@@ -1,0 +1,248 @@
+{
+  "guides" : [ {
+    "icon" : {
+      "name" : "474744012922_1610191240468.png",
+      "_id" : "5ff99188bc66571a139298c5",
+      "dimensions" : {
+        "md" : {
+          "width" : 140,
+          "url" : "https://cdn.unibag.vn/md_474744012922_1610191240468.png",
+          "height" : 140
+        },
+        "sm" : {
+          "width" : 70,
+          "url" : "https://cdn.unibag.vn/sm_474744012922_1610191240468.png",
+          "height" : 70
+        }
+      }
+    },
+    "_id" : "5fd82958babb26c76c11a0fb",
+    "title" : "Freeship đơn hàng 299K"
+  }, {
+    "icon" : {
+      "name" : "598792263026_1610191227041.png",
+      "_id" : "5ff9917bbc66575a849298c4",
+      "dimensions" : {
+        "md" : {
+          "width" : 140,
+          "url" : "https://cdn.unibag.vn/md_598792263026_1610191227041.png",
+          "height" : 140
+        },
+        "sm" : {
+          "width" : 70,
+          "url" : "https://cdn.unibag.vn/sm_598792263026_1610191227041.png",
+          "height" : 70
+        }
+      }
+    },
+    "_id" : "5fe2f183d47bedf3deb759fd",
+    "title" : "Đảm bảo chất lượng"
+  }, {
+    "icon" : {
+      "name" : "471678414204_1610191255334.png",
+      "_id" : "5ff99197bc66574ba99298c6",
+      "dimensions" : {
+        "md" : {
+          "width" : 140,
+          "url" : "https://cdn.unibag.vn/md_471678414204_1610191255334.png",
+          "height" : 140
+        },
+        "sm" : {
+          "width" : 70,
+          "url" : "https://cdn.unibag.vn/sm_471678414204_1610191255334.png",
+          "height" : 70
+        }
+      }
+    },
+    "_id" : "5ff991990cec09d5d677bfde",
+    "title" : "Giao hàng từ 1-3 ngày"
+  } ],
+  "name" : "Vest Nữ - Kho Zody",
+  "_id" : "605ab89b08309d70183e9365",
+  "shareDesc" : "Vest Nữ - Kho Zody Vest Nữ - Kho Zody",
+  "shareImages" : [ "https://cdn.unibag.vn/md_238755051175_1616558530426.jpg", "https://cdn.unibag.vn/md_523712404320_1616558535227.jpg", "https://cdn.unibag.vn/md_335545457366_1616558539212.jpg" ],
+  "photos" : [ {
+    "name" : "238755051175_1616558530426.jpg",
+    "_id" : "605ab9c2b94a6a4ee6f7f128",
+    "dimensions" : {
+      "md" : {
+        "width" : 1200,
+        "url" : "https://cdn.unibag.vn/md_238755051175_1616558530426.jpg",
+        "height" : 1611
+      },
+      "sm" : {
+        "width" : 561,
+        "url" : "https://cdn.unibag.vn/sm_238755051175_1616558530426.jpg",
+        "height" : 753
+      }
+    }
+  }, {
+    "name" : "523712404320_1616558535227.jpg",
+    "_id" : "605ab9c7b94a6a94a1f7f129",
+    "dimensions" : {
+      "md" : {
+        "width" : 1200,
+        "url" : "https://cdn.unibag.vn/md_523712404320_1616558535227.jpg",
+        "height" : 1468
+      },
+      "sm" : {
+        "width" : 561,
+        "url" : "https://cdn.unibag.vn/sm_523712404320_1616558535227.jpg",
+        "height" : 686
+      }
+    }
+  }, {
+    "name" : "335545457366_1616558539212.jpg",
+    "_id" : "605ab9cbb94a6a3658f7f12a",
+    "dimensions" : {
+      "md" : {
+        "width" : 1200,
+        "url" : "https://cdn.unibag.vn/md_335545457366_1616558539212.jpg",
+        "height" : 1741
+      },
+      "sm" : {
+        "width" : 561,
+        "url" : "https://cdn.unibag.vn/sm_335545457366_1616558539212.jpg",
+        "height" : 814
+      }
+    }
+  } ],
+  "items" : [ {
+    "price" : {
+      "market" : 150000,
+      "supplier" : 105000,
+      "maximum" : 150000,
+      "minimum" : 127500,
+      "profit" : 30000,
+      "base" : 120000
+    },
+    "hasWishList" : false,
+    "display" : true,
+    "name" : "Bột chùm ngây Bamboo nguyên chất",
+    "_id" : "605aba00954f5f66ed804b82",
+    "sku" : "vestnu001",
+    "properties" : [ {
+      "name" : "Họa tiết ",
+      "_id" : "60487698210ba9c2c81ec164",
+      "value" : {
+        "name" : "Chim xanh",
+        "_id" : "604876c7210ba9c2c81ec1c6"
+      }
+    }, {
+      "name" : "Màu sắc",
+      "_id" : "60122bffc6bdfa785046ffb4",
+      "value" : {
+        "name" : "Đen ",
+        "_id" : "60122c61c6bdfa785046ffe2"
+      }
+    } ],
+    "picture" : "https://selly-ims-develop.s3-ap-southeast-1.amazonaws.com/md_340379447672_1616488063020.png",
+    "info" : {
+      "weight" : "300 grams",
+      "inventory" : {
+        "name" : "Zody",
+        "id" : 46,
+        "_id" : "605ab11d35bdae36afcaa451"
+      },
+      "dimension" : "10X20 (cm)"
+    },
+    "isOutOfStock" : false
+  }, {
+    "price" : {
+      "market" : 170000,
+      "supplier" : 119000,
+      "maximum" : 170000,
+      "minimum" : 144500,
+      "profit" : 34000,
+      "base" : 136000
+    },
+    "hasWishList" : false,
+    "display" : false,
+    "name" : "Bột chùm ngây Bamboo nguyên chất",
+    "_id" : "605aba1d954f5f66ed804b85",
+    "sku" : "vestnu003",
+    "properties" : [ {
+      "name" : "Màu sắc",
+      "_id" : "60122bffc6bdfa785046ffb4",
+      "value" : {
+        "name" : "Hồng",
+        "_id" : "60122c61c6bdfa785046ffe5"
+      }
+    }, {
+      "name" : "Họa tiết ",
+      "_id" : "60487698210ba9c2c81ec164",
+      "value" : {
+        "name" : "Hoa đỏ",
+        "_id" : "604876c7210ba9c2c81ec1c5"
+      }
+    } ],
+    "picture" : "https://selly-ims-develop.s3-ap-southeast-1.amazonaws.com/md_340379447672_1616488063020.png",
+    "info" : {
+      "weight" : "300 grams",
+      "inventory" : {
+        "name" : "Zody",
+        "id" : 46,
+        "_id" : "605ab11d35bdae36afcaa451"
+      },
+      "dimension" : "10X20 (cm)"
+    },
+    "isOutOfStock" : false
+  }, {
+    "price" : {
+      "market" : 160000,
+      "supplier" : 112000,
+      "maximum" : 160000,
+      "minimum" : 136000,
+      "profit" : 32000,
+      "base" : 128000
+    },
+    "hasWishList" : false,
+    "display" : false,
+    "name" : "Bột chùm ngây Bamboo nguyên chất",
+    "_id" : "605aba2a954f5f66ed804b88",
+    "sku" : "vestnu002",
+    "properties" : [ {
+      "name" : "Họa tiết ",
+      "_id" : "60487698210ba9c2c81ec164",
+      "value" : {
+        "name" : "Trụ cao cổ",
+        "_id" : "6048772cbeec2e6e3ad17be2"
+      }
+    }, {
+      "name" : "Màu sắc",
+      "_id" : "60122bffc6bdfa785046ffb4",
+      "value" : {
+        "name" : "Trắng",
+        "_id" : "60122c61c6bdfa785046ffe3"
+      }
+    } ],
+    "picture" : "https://selly-ims-develop.s3-ap-southeast-1.amazonaws.com/md_340379447672_1616488063020.png",
+    "info" : {
+      "weight" : "300 grams",
+      "inventory" : {
+        "name" : "Zody",
+        "id" : 46,
+        "_id" : "605ab11d35bdae36afcaa451"
+      },
+      "dimension" : "10X20 (cm)"
+    },
+    "isOutOfStock" : false
+  } ],
+  "desc" : "<p>Vest Nữ - Kho Zody Vest Nữ - Kho Zody Vest Nữ - Kho Zody</p>",
+  "info" : {
+    "supplier" : {
+      "name" : "Bamboo",
+      "_id" : "6059a67e825c94a0f6a1cb7f"
+    },
+    "category" : {
+      "name" : "Unibag Categories",
+      "_id" : "6059a67e825c94a0f6a1cb80"
+    },
+    "inventory" : {
+      "name" : "Zody",
+      "id" : 46,
+      "_id" : "605ab11d35bdae36afcaa451"
+    },
+    "profit" : 30000
+  }
+}

@@ -80,15 +80,15 @@ public class JiraIssuePage extends Utility {
             waitForControl(button_CreateIssue);
             openIssuePage();
 
-            logInfo(logTest,  "Input Project name");
-            waitForControl(textbox_IssueType);
-            inputTextBoxProject("Project_Demo");
+//            logInfo(logTest,  "Input Project name");
+//            waitForControl(textbox_IssueType);
+//            inputTextBoxProject("Project_Demo");
 
-            logInfo(logTest,  "Input Issue type");
-            inputTextBoxIssueType("Bug");
+//            logInfo(logTest,  "Input Issue type");
+//            inputTextBoxIssueType("Bug");
 
             logInfo(logTest,  "Input summary");
-            inputTextBoxSummary("This is a bug");
+            inputTextBoxSummary("This is a Story");
 
             logInfo(logTest,  "Submit issue");
             clickButtonSubmit();
