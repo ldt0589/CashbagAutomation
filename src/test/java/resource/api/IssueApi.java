@@ -21,22 +21,22 @@ public class IssueApi extends Utility {
 
     private JSONParser jsonParser = new JSONParser();
     private JSONObject jsonExpected = null;
-    private JSONObject jsonActual = null;
+    private JSONObject issueResponse = null;
 
-    private RequestSpecification IssueSpecification(String JiRaName, String JiRaToken) {
+    private RequestSpecification IssueSpecification() {
         return given().
                 baseUri("http://" + GlobalVariables.JIRA_DOMAIN + ".atlassian.net").
                 basePath("/rest/api/2/issue").
                 relaxedHTTPSValidation().
                 contentType("application/json").
-                auth().preemptive().basic(JiRaName, JiRaToken);
+                auth().preemptive().basic(GlobalVariables.JIRA_USERNAME, GlobalVariables.JIRA_TOKEN);
     }
 
     public Response getIssueDetail(ExtentTest logTest, String issueId) {
         logInfo(logTest, "callgetIssueAPI starts..........");
         log4j.info("callgetIssueAPI starts..........");
 
-        RequestSpecification requestSpecification = this.IssueSpecification(GlobalVariables.JIRA_USERNAME, GlobalVariables.JIRA_TOKEN);
+        RequestSpecification requestSpecification = IssueSpecification();
 //        requestSpecification.pathParam("issueId", issueId);
         Response response = requestSpecification.get(issueId);
 
@@ -49,21 +49,21 @@ public class IssueApi extends Utility {
         return response;
     }
 
-    public void verifyGetIssueResponse(String issueId, Hashtable<String, String> data, Response response, ExtentTest logTest) throws IOException, ParseException {
+    public void verifyIssueResponse(String issueId, Hashtable<String, String> data, Response response, ExtentTest logTest) throws IOException, ParseException {
         logInfo(logTest, "verifyGetIssueResponse starts..........");
         log4j.info("verifyGetIssueResponse starts..........");
 
         if (response.getStatusCode() == 200) {
             logPass(logTest, "API calling successful. Status code response is  200");
 
-            jsonActual = (JSONObject) jsonParser.parse(response.body().asString());
+            issueResponse = (JSONObject) jsonParser.parse(response.body().asString());
 
             logInfo(logTest, "Verify the response is not empty");
-            verifyActualIsNotEmptyResults(logTest, jsonActual.get("key").toString());
+            verifyActualIsNotEmptyResults(logTest, issueResponse.get("key").toString());
 
-            String actualIssueId = jsonActual.get("key").toString();
-            String actualIssueType = ((JSONObject) ((JSONObject) jsonActual.get("fields")).get("issuetype")).get("name").toString();
-            String actualIssueSummary = ((JSONObject) jsonActual.get("fields")).get("summary").toString();
+            String actualIssueId = issueResponse.get("key").toString();
+            String actualIssueType = ((JSONObject) ((JSONObject) issueResponse.get("fields")).get("issuetype")).get("name").toString();
+            String actualIssueSummary = ((JSONObject) issueResponse.get("fields")).get("summary").toString();
 
             verifyExpectedAndActualResults(logTest, issueId, actualIssueId);
             verifyExpectedAndActualResults(logTest, data.get("IssueType"), actualIssueType);

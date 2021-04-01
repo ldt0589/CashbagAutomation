@@ -3,7 +3,7 @@ package resource.common;
 public class GlobalVariables {
     //JIRA
     public static String JIRA_URL = "https://lethang052407.atlassian.net";
-    public static String JIRA_DOMAIN = "https://lethang052407";
+    public static String JIRA_DOMAIN = "lethang052407";
     public static String JIRA_USERNAME = "lethang052407@gmail.com";
     public static String JIRA_TOKEN = "yxbZgQUQIWpxm1IPiDrA1ABA";
     public static String JIRA_PASSWORD = "Th@ng2407";

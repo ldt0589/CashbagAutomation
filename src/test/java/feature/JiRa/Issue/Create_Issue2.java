@@ -42,7 +42,7 @@ public class Create_Issue2 extends TestBase {
 //
 //                logStep = logStepInfo(logMethod, "Step #4: Verify that the issue is created successfully");
 //                response = issueApi.getIssueDetail(logStep, jiraIssuePage.getIssueId(logStep));
-//                issueApi.verifyGetIssueResponse(jiraIssuePage.getIssueId(logStep), data, response, logStep);
+//                issueApi.verifyIssueResponse(jiraIssuePage.getIssueId(logStep), data, response, logStep);
 
             } catch (Exception e) {
                     log4j.error(getStackTrade(e.getStackTrace()));

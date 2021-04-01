@@ -7,7 +7,7 @@
       "TestingType": "Regression",
       "TestType": "Positive",
       "ProjectName": "Project_Demo",
-      "IssueType": "Bug",
+      "IssueType": "Story",
       "IssueSummary": "This is a bug"
       }
   ],

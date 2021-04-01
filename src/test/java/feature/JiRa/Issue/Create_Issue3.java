@@ -35,14 +35,14 @@ public class Create_Issue3 extends TestBase {
 
                 logStep = logStepInfo(logMethod, "Step #2: User create issue as bug");
                 jiraIssuePage = PageFactory.initElements(Utility.getDriver(), JiraIssuePage.class);
-                jiraIssuePage.createIssue(logStep);
+//                jiraIssuePage.createIssue(logStep);
 
                 logStep = logStepInfo(logMethod, "Step #3: Verify that the successful message displays");
                 jiraIssuePage.checkSuccessfulMsgDisplay(logStep);
 
                 logStep = logStepInfo(logMethod, "Step #4: Verify that the issue is created successfully");
                 response = issueApi.getIssueDetail(logStep, jiraIssuePage.getIssueId(logStep));
-                issueApi.verifyGetIssueResponse(jiraIssuePage.getIssueId(logStep), data, response, logStep);
+                issueApi.verifyIssueResponse(jiraIssuePage.getIssueId(logStep), data, response, logStep);
 
             } catch (Exception e) {
                     log4j.error(getStackTrade(e.getStackTrace()));

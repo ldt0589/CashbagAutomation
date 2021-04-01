@@ -1,10 +1,10 @@
 package resource.pages;
 
 import com.aventstack.extentreports.ExtentTest;
-import resource.utility.Utility;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import resource.utility.Utility;
 
 import java.io.IOException;
 
@@ -72,7 +72,7 @@ public class JiraIssuePage extends Utility {
         button_submit.click();
     }
 
-    public void createIssue(ExtentTest logTest) throws IOException {
+    public void createIssue(ExtentTest logTest, String issueSummary, String issueType) throws IOException {
         try {
             log4j.debug("create an Issue...start");
 
@@ -84,11 +84,11 @@ public class JiraIssuePage extends Utility {
 //            waitForControl(textbox_IssueType);
 //            inputTextBoxProject("Project_Demo");
 
-//            logInfo(logTest,  "Input Issue type");
-//            inputTextBoxIssueType("Bug");
+            logInfo(logTest,  "Input Issue type");
+            inputTextBoxIssueType(issueType);
 
             logInfo(logTest,  "Input summary");
-            inputTextBoxSummary("This is a Story");
+            inputTextBoxSummary(issueSummary);
 
             logInfo(logTest,  "Submit issue");
             clickButtonSubmit();

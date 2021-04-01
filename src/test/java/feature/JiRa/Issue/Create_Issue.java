@@ -18,7 +18,7 @@ public class Create_Issue extends TestBase {
     private JiraIssuePage jiraIssuePage = null;
     private Response response;
     private IssueApi issueApi = new IssueApi();
-    public String issueID = null;
+    public String issueID;
 
     @Test(dataProvider = "getDataForTest", priority = 1, description = "Create an Issue on Jira")
     public void TC01(Hashtable<String, String> data) throws IOException {
@@ -34,7 +34,7 @@ public class Create_Issue extends TestBase {
 
                 logStep = logStepInfo(logMethod, "Step #2: User create issue as bug");
                 jiraIssuePage = PageFactory.initElements(Utility.getDriver(), JiraIssuePage.class);
-                jiraIssuePage.createIssue(logStep);
+                jiraIssuePage.createIssue(logStep, data.get("IssueSummary"), data.get("IssueType"));
 
                 logStep = logStepInfo(logMethod, "Step #3: Verify that the successful message displays");
                 jiraIssuePage.checkSuccessfulMsgDisplay(logStep);
@@ -42,7 +42,7 @@ public class Create_Issue extends TestBase {
                 logStep = logStepInfo(logMethod, "Step #4: Verify that the issue is created successfully");
                 issueID = jiraIssuePage.getIssueId(logStep);
                 response = issueApi.getIssueDetail(logStep, issueID);
-                issueApi.verifyGetIssueResponse(issueID, data, response, logStep);
+                issueApi.verifyIssueResponse(issueID, data, response, logStep);
 
             } catch (Exception e) {
                     log4j.error(getStackTrade(e.getStackTrace()));
