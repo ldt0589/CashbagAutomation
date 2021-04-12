@@ -1,173 +1,86 @@
 {
   "guides" : [ {
     "icon" : {
-      "name" : "598792263026_1610191227041.png",
-      "_id" : "5ff9917bbc66575a849298c4",
+      "name" : "627495821128_1617177627312.png",
+      "_id" : "60642c1b828d61bc9491e76e",
       "dimensions" : {
         "md" : {
           "width" : 140,
-          "url" : "https://cdn.unibag.vn/md_598792263026_1610191227041.png",
+          "url" : "https://unibag-develop.s3-ap-southeast-1.amazonaws.com/md_627495821128_1617177627312.png",
           "height" : 140
         },
         "sm" : {
           "width" : 70,
-          "url" : "https://cdn.unibag.vn/sm_598792263026_1610191227041.png",
+          "url" : "https://unibag-develop.s3-ap-southeast-1.amazonaws.com/sm_627495821128_1617177627312.png",
           "height" : 70
         }
       }
     },
-    "_id" : "5fe2f183d47bedf3deb759fd",
-    "title" : "Đảm bảo chất lượng"
-  }, {
-    "icon" : {
-      "name" : "471678414204_1610191255334.png",
-      "_id" : "5ff99197bc66574ba99298c6",
-      "dimensions" : {
-        "md" : {
-          "width" : 140,
-          "url" : "https://cdn.unibag.vn/md_471678414204_1610191255334.png",
-          "height" : 140
-        },
-        "sm" : {
-          "width" : 70,
-          "url" : "https://cdn.unibag.vn/sm_471678414204_1610191255334.png",
-          "height" : 70
-        }
-      }
-    },
-    "_id" : "5ff991990cec09d5d677bfde",
-    "title" : "Giao hàng từ 1-3 ngày"
+    "_id" : "60642c1c9172763aba903141",
+    "title" : "Free ship 300k"
   } ],
-  "name" : "Sản phẩm - Kho Unibag",
-  "_id" : "605ae1256c8e418a9f798048",
-  "shareDesc" : "Sản phẩm - Kho Unibag",
-  "shareImages" : [ "https://cdn.unibag.vn/md_558344734256_1616568664853.jpg" ],
+  "name" : "Sản phẩm - Kho Hà Nội",
+  "_id" : "606bcfeb90826dfeecb5d307",
+  "shareDesc" : "Sản phẩm - Kho Hà Nội",
+  "shareImages" : [ "https://unibag-develop.s3-ap-southeast-1.amazonaws.com/md_288957771092_1617678406217.png" ],
   "photos" : [ {
-    "name" : "558344734256_1616568664853.jpg",
-    "_id" : "605ae159b94a6a927ff7f133",
+    "name" : "288957771092_1617678406217.png",
+    "_id" : "606bd04609020c703efbd005",
     "dimensions" : {
       "md" : {
         "width" : 1200,
-        "url" : "https://cdn.unibag.vn/md_558344734256_1616568664853.jpg",
-        "height" : 1800
+        "url" : "https://unibag-develop.s3-ap-southeast-1.amazonaws.com/md_288957771092_1617678406217.png",
+        "height" : 954
       },
       "sm" : {
         "width" : 561,
-        "url" : "https://cdn.unibag.vn/sm_558344734256_1616568664853.jpg",
-        "height" : 842
+        "url" : "https://unibag-develop.s3-ap-southeast-1.amazonaws.com/sm_288957771092_1617678406217.png",
+        "height" : 446
       }
     }
   } ],
   "items" : [ {
     "price" : {
-      "market" : 150000,
-      "supplier" : 75000,
-      "maximum" : 150000,
-      "minimum" : 127500,
-      "profit" : 30000,
-      "base" : 120000
-    },
-    "hasWishList" : false,
-    "display" : false,
-    "name" : "Chà bông nấm hương rong biển 50g",
-    "_id" : "605ae13d6c8e418a9f7985f2",
-    "sku" : "skuUnibag",
-    "properties" : [ {
-      "name" : "Model",
-      "_id" : "6049e347ee19827c7b700ea3",
-      "value" : {
-        "name" : "Loại 1 đôi",
-        "_id" : "6049e35bee19827c7b700ea6"
-      }
-    }, {
-      "name" : "Chiết xuất",
-      "_id" : "605846736c2dc585e68f65eb",
-      "value" : {
-        "name" : "Hoa Coton",
-        "_id" : "6058472e6c2dc585e68f664d"
-      }
-    }, {
-      "name" : "Họa tiết ",
-      "_id" : "60487698210ba9c2c81ec164",
-      "value" : {
-        "name" : "Chim xanh",
-        "_id" : "604876c7210ba9c2c81ec1c6"
-      }
-    } ],
-    "picture" : "https://selly-ims-develop.s3-ap-southeast-1.amazonaws.com/md_957558876556_1616488064319.jpg",
-    "info" : {
-      "weight" : "50 grams",
-      "inventory" : {
-        "name" : "Unibag",
-        "id" : 49,
-        "_id" : "605ac8480e6926a2abe41c44"
-      },
-      "dimension" : "10x5 (cm)"
-    },
-    "isOutOfStock" : false
-  }, {
-    "price" : {
-      "market" : 150000,
-      "supplier" : 75000,
-      "maximum" : 150000,
-      "minimum" : 127500,
-      "profit" : 30000,
-      "base" : 120000
+      "market" : 200000,
+      "supplier" : 140000,
+      "maximum" : 220000,
+      "minimum" : 170000,
+      "profit" : 40000,
+      "base" : 160000
     },
     "hasWishList" : false,
     "display" : true,
-    "name" : "Bột rau má Bamboo nguyên chất",
-    "_id" : "605ae14b6c8e418a9f7985f5",
-    "sku" : "skuUnibag02",
-    "properties" : [ {
-      "name" : "Họa tiết ",
-      "_id" : "60487698210ba9c2c81ec164",
-      "value" : {
-        "name" : "Công trắng",
-        "_id" : "604876c7210ba9c2c81ec1c8"
-      }
-    }, {
-      "name" : "Chiết xuất",
-      "_id" : "605846736c2dc585e68f65eb",
-      "value" : {
-        "name" : "Dầu Argan Organic",
-        "_id" : "6058472e6c2dc585e68f664e"
-      }
-    }, {
-      "name" : "Model",
-      "_id" : "6049e347ee19827c7b700ea3",
-      "value" : {
-        "name" : "Loại 1 đôi",
-        "_id" : "6049e35bee19827c7b700ea6"
-      }
-    } ],
-    "picture" : "https://selly-ims-develop.s3-ap-southeast-1.amazonaws.com/md_248348862875_1616488063473.jpg",
+    "name" : "SP-HaNoi01",
+    "_id" : "606bd07890826dfeecb5d311",
+    "sku" : "skuKhoHaNoi01",
+    "properties" : [ ],
+    "picture" : "https://selly-ims-develop.s3-ap-southeast-1.amazonaws.com/md_353164580104_1617783400441.png",
     "info" : {
-      "weight" : "300 grams",
+      "weight" : "1 grams",
       "inventory" : {
-        "name" : "Unibag",
-        "id" : 49,
-        "_id" : "605ac8480e6926a2abe41c44"
+        "name" : "Kho HaNoi",
+        "id" : 35212,
+        "_id" : "60668a8899c1cf0da8ffa023"
       },
-      "dimension" : "10X20 (cm)"
+      "dimension" : "10x10x10 (cm)"
     },
     "isOutOfStock" : false
   } ],
-  "desc" : "<p>Sản phẩm - Kho UnibagSản phẩm - Kho UnibagSản phẩm - Kho Unibag</p>",
+  "desc" : "<p>Sản phẩm - Kho Hà Nội Sản phẩm - Kho Hà Nội</p>",
   "info" : {
     "supplier" : {
-      "name" : "Bamboo",
-      "_id" : "6059a67e825c94a0f6a1cb7f"
+      "name" : "Iphone",
+      "_id" : "606691d999c1cf0da8ffa02d"
     },
     "category" : {
-      "name" : "Unibag Categories",
-      "_id" : "6059a67e825c94a0f6a1cb80"
+      "name" : "Điện Thoại",
+      "_id" : "6066924999c1cf0da8ffa02e"
     },
     "inventory" : {
-      "name" : "Unibag",
-      "id" : 49,
-      "_id" : "605ac8480e6926a2abe41c44"
+      "name" : "Kho HaNoi",
+      "id" : 35212,
+      "_id" : "60668a8899c1cf0da8ffa023"
     },
-    "profit" : 30000
+    "profit" : 40000
   }
 }

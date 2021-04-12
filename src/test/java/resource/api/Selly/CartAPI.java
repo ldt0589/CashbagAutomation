@@ -17,8 +17,7 @@ import resource.common.TestBase;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 import static io.restassured.RestAssured.given;
 
@@ -122,6 +121,22 @@ public class CartAPI extends TestBase {
         return itemArray;
     }
 
+    public void addMultiItemsIntoCart(ExtentTest logTest, String sellerToken, Hashtable<String, String> data) throws IOException {
+        try {
+            for(int i=1; i < 10; i++) {
+                String prodID = data.get("Product_" + i);
+                if (prodID != null){
+                    addItemIntoCart(logTest, sellerToken, prodID);
+                    logInfo(logTest, "-----> prodID" + i + ": " + prodID);
+                }
+            }
+
+        } catch (Exception e) {
+            log4j.error("addMultiItemsIntoCart method - ERROR: " + e);
+            logException(logTest, "addMultiItemsIntoCart method - ERROR: ", e);
+        }
+    }
+
     public void addItemIntoCart(ExtentTest logTest, String sellerToken, String productID) throws IOException {
         try {
 
@@ -191,33 +206,33 @@ public class CartAPI extends TestBase {
             jsonProductDetail = (JSONObject) jsonParser.parse(response.body().asString());
 
             JSONObject productdetailObject = (JSONObject)((JSONObject) jsonProductDetail.get("data")).get("product");
-            String productInventory = (String) ((JSONObject)((JSONObject) productdetailObject.get("info")).get("inventory")).get("name");
+//            String productInventory = (String) ((JSONObject)((JSONObject) productdetailObject.get("info")).get("inventory")).get("name");
             itemArray = (JSONArray)((JSONObject)((JSONObject) jsonProductDetail.get("data")).get("product")).get("items");
 
-            switch (productInventory) {
-                case "Selly":
-                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Selly_Inventory_Json_file);
-                    break;
-                case "Zody":
-                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Zody_Inventory_Json_file);
-                    break;
-                case "Cashbag":
-                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Cashbag_Inventory_Json_file);
-                    break;
-                case "Unibag":
-                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Unibag_Inventory_Json_file);
-                    break;
-                case "DaNang":
-                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_DaNang_Inventory_Json_file);
-                    break;
-                case "HCM":
-                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_HCM_Inventory_Json_file);
-                    break;
-                default:
-                    logInfo(logTest, "-----> No Inventory here");
-            }
-
-            writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Selly_Inventory_Json_file);
+//            switch (productInventory) {
+//                case "Selly":
+//                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Selly_Inventory_Json_file);
+//                    break;
+//                case "Zody":
+//                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Zody_Inventory_Json_file);
+//                    break;
+//                case "Cashbag":
+//                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Cashbag_Inventory_Json_file);
+//                    break;
+//                case "Unibag":
+//                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Unibag_Inventory_Json_file);
+//                    break;
+//                case "DaNang":
+//                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_DaNang_Inventory_Json_file);
+//                    break;
+//                case "HCM":
+//                    writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_HCM_Inventory_Json_file);
+//                    break;
+//                default:
+//                    logInfo(logTest, "-----> No Inventory here");
+//            }
+//
+//            writeJsonFile(logTest, productdetailObject, GlobalVariables.Product_In_Selly_Inventory_Json_file);
 
             return itemArray;
 

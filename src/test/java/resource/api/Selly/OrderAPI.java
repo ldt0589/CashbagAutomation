@@ -3,6 +3,7 @@ package resource.api.Selly;
 import com.aventstack.extentreports.ExtentTest;
 import com.google.common.io.Files;
 import com.google.gson.JsonObject;
+import com.perfecto.reportium.client.ReportiumClientProvider;
 import groovy.json.JsonParser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -31,10 +32,15 @@ public class OrderAPI extends CartAPI{
     private JSONObject itemsObject = null;
     private JSONArray sessionArray = null;
     private JSONObject jsonSession = null;
-    private JSONParser jsonParser = new JSONParser();;
+    private JSONParser jsonParser = new JSONParser();
+    private JSONObject responseObject = null;
+    private JSONObject customerObject = null;
+    private String customerID = null;
+    private String locationID = null;
     public static ArrayList<String> sessionIDList = new ArrayList<String>();
     public static ArrayList<String> sessionOrderIDList = new ArrayList<String>();
     public static ArrayList<String> deliverySessionIDList = new ArrayList<String>();
+
     public static String sessionKey = null;
     private String checksum = "SmaAalemakwAskd";
     private String payloadString;
@@ -69,6 +75,16 @@ public class OrderAPI extends CartAPI{
                 relaxedHTTPSValidation();
     }
 
+    private RequestSpecification createCustomer(String userToken) {
+        return given().
+                baseUri("https://" + GlobalVariables.SellyEnvironment).
+                header("Authorization", "Bearer " + userToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+//                log().ifValidationFails().
+        relaxedHTTPSValidation();
+    }
+
     public static String readPayloadDataFromJsonFile(String filePath) throws IOException {
         String data = null;
         try {
@@ -82,17 +98,17 @@ public class OrderAPI extends CartAPI{
         return data;
     }
 
-    public void createMultiOrder(ExtentTest logTest, String sellerToken) throws IOException {
+    public void createMultiOrder(ExtentTest logTest, String sellerToken, JSONObject customer) throws IOException {
         try {
 
             createMultiSessionOrder(logTest, sellerToken);
-            deliverySessionArray = createMultiDeliverySession(logTest, sellerToken);
+            deliverySessionArray = createMultiDeliverySession(logTest, sellerToken, customer);
 
             JSONObject payloadObject = new JSONObject();
             payloadObject.put("checkSum", "SmaAalemakwAskd");
             JSONObject customerObject = new JSONObject();
-            customerObject.put("id", "60581310fcfe4748d00691b0");
-            customerObject.put("location", "60581310fcfe4748d00691af");
+            customerObject.put("id", customer.get("customerID"));
+            customerObject.put("location", customer.get("locationID"));
             payloadObject.put("customer", customerObject);
             payloadObject.put("paymentMethod", "COD");
             payloadObject.put("sessionKey", sessionKey);
@@ -128,7 +144,7 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public JSONArray createMultiDeliverySession(ExtentTest logTest, String sellerToken) throws IOException {
+    public JSONArray createMultiDeliverySession(ExtentTest logTest, String sellerToken, JSONObject customer) throws IOException {
         try {
 
             RequestSpecification createMultiDeliverySessionSpec = this.createMultiDeliverySessionSpecification(sellerToken);
@@ -138,8 +154,8 @@ public class OrderAPI extends CartAPI{
             JSONObject payloadObject = new JSONObject();
             payloadObject.put("checkSum", "SmaAalemakwAskd");
             JSONObject customerObject = new JSONObject();
-            customerObject.put("id", "60581310fcfe4748d00691b0");
-            customerObject.put("location", "60581310fcfe4748d00691af");
+            customerObject.put("id", customer.get("customerID"));
+            customerObject.put("location", customer.get("locationID"));
             payloadObject.put("customer", customerObject);
             payloadObject.put("sessionOrders", sessionIDList);
 
@@ -162,6 +178,40 @@ public class OrderAPI extends CartAPI{
         }
         return deliverySessionArr;
     }
+
+    public JSONObject createCustomer(ExtentTest logTest, String sellerToken) throws IOException {
+        try {
+
+            RequestSpecification createCustomer = this.createCustomer(sellerToken);
+            String payload = String.format(readPayloadDataFromJsonFile(GlobalVariables.create_customer), "Customer" + Math.floor(Math.random()*9999));
+            createCustomer.body(payload).log().all();
+
+            Response response = createCustomer.post("/customers");
+
+            logInfo(logTest, "-----> createCustomer Request Body: " + payload);
+            logInfo(logTest, "-----> createCustomer Response Body: " + response.getBody().asString());
+
+            responseObject = (JSONObject) jsonParser.parse(response.body().asString());
+
+            customerID = (String) ((JSONObject) ((JSONObject) responseObject.get("data")).get("customer")).get("_id");
+            locationID = (String) ((JSONObject)((JSONArray) ((JSONObject) ((JSONObject) responseObject.get("data")).get("customer")).get("location")).get(0)).get("_id");
+//            locationID = (String) locationObject.get("_id");
+            logInfo(logTest, "-----> customerID: " + customerID);
+            logInfo(logTest, "-----> locationID: " + locationID);
+
+            customerObject = new JSONObject();
+            customerObject.put("customerID", customerID);
+            customerObject.put("locationID", locationID);
+
+            return customerObject;
+
+        } catch (Exception e) {
+            log4j.error("createCustomer method - ERROR: " + e);
+            logException(logTest, "createCustomer method - ERROR: ", e);
+        }
+        return customerObject;
+    }
+
 
     public void createMultiSessionOrder(ExtentTest logTest, String sellerToken) throws IOException {
         try {

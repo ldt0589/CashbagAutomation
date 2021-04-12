@@ -69,6 +69,7 @@ public class GlobalVariables {
     public static final String OUTPUT_PATH = PROJECT_PATH + "/src/main/resources/output/";
 
     //JSON FILE PATH
+    public static final String create_customer = PROJECT_PATH + "/src/test/java/resource/payload_templates/Selly/create_customer_payload.json";
     public static final String create_multi_delivery_payload = PROJECT_PATH + "/src/test/java/resource/payload_templates/Selly/create_delivery_session_multiple_payload.json";
     public static final String Product_In_Selly_Inventory_Json_file = PROJECT_PATH + "/src/test/java/resource/product_detail/Product_in_Selly_Inventory.json";
     public static final String Product_In_Cashbag_Inventory_Json_file = PROJECT_PATH + "/src/test/java/resource/product_detail/Product_in_Cashbag_Inventory.json";
