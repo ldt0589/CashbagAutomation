@@ -1,25 +1,16 @@
 package resource.api.Selly;
 
 import com.aventstack.extentreports.ExtentTest;
-import com.google.common.io.Files;
-import com.google.gson.JsonObject;
-import com.perfecto.reportium.client.ReportiumClientProvider;
-import groovy.json.JsonParser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.openqa.selenium.json.Json;
 import resource.common.GlobalVariables;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-
 
 import static io.restassured.RestAssured.given;
 
@@ -32,15 +23,18 @@ public class OrderAPI extends CartAPI{
     private JSONObject itemsObject = null;
     private JSONArray sessionArray = null;
     private JSONObject jsonSession = null;
+    private JSONObject jsonBody = null;
     private JSONParser jsonParser = new JSONParser();
     private JSONObject responseObject = null;
     private JSONObject customerObject = null;
     private String customerID = null;
     private String locationID = null;
     public static ArrayList<String> sessionIDList = new ArrayList<String>();
+    public static ArrayList<String> IMSIdList = new ArrayList<String>();
+    public static ArrayList<String> orderIDList = new ArrayList<String>();
     public static ArrayList<String> sessionOrderIDList = new ArrayList<String>();
     public static ArrayList<String> deliverySessionIDList = new ArrayList<String>();
-
+    public static ArrayList<String> orderIDs = null;
     public static String sessionKey = null;
     private String checksum = "SmaAalemakwAskd";
     private String payloadString;
@@ -51,7 +45,6 @@ public class OrderAPI extends CartAPI{
                 header("Authorization", "Bearer " + userToken).
                 header("Content-Type","application/json").
                 contentType("application/json").
-//                log().ifValidationFails().
                 relaxedHTTPSValidation();
     }
 
@@ -61,7 +54,6 @@ public class OrderAPI extends CartAPI{
                 header("Authorization", "Bearer " + userToken).
                 header("Content-Type","application/json").
                 contentType("application/json").
-//                log().ifValidationFails().
                 relaxedHTTPSValidation();
     }
 
@@ -71,7 +63,6 @@ public class OrderAPI extends CartAPI{
                 header("Authorization", "Bearer " + userToken).
                 header("Content-Type","application/json").
                 contentType("application/json").
-//                log().ifValidationFails().
                 relaxedHTTPSValidation();
     }
 
@@ -81,7 +72,24 @@ public class OrderAPI extends CartAPI{
                 header("Authorization", "Bearer " + userToken).
                 header("Content-Type","application/json").
                 contentType("application/json").
-//                log().ifValidationFails().
+        relaxedHTTPSValidation();
+    }
+
+    private RequestSpecification getOrderDetail(String adminToken) {
+        return given().
+                baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
+                header("Authorization", "Bearer " + adminToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
+    private RequestSpecification adminConfirmOrder(String adminToken) {
+        return given().
+                baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
+                header("Authorization", "Bearer " + adminToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
         relaxedHTTPSValidation();
     }
 
@@ -98,7 +106,68 @@ public class OrderAPI extends CartAPI{
         return data;
     }
 
-    public void createMultiOrder(ExtentTest logTest, String sellerToken, JSONObject customer) throws IOException {
+    public ArrayList getIMSOrderIDs(ExtentTest logTest, String adminToken, ArrayList orderIDList) throws IOException {
+        try {
+
+            for(int i=0; i < orderIDList.size(); i++){
+
+                String OrderID = (String) orderIDList.get(i);
+                RequestSpecification getOrderDetail = this.getOrderDetail(adminToken);
+                Response response = getOrderDetail.get("/order/" + OrderID + "/items");
+
+                logInfo(logTest, "-----> adminApproveOrder URI: https://" + GlobalVariables.SellyAdminEnvironment + "/order/" + OrderID + "/approve");
+                logInfo(logTest, "-----> adminApproveOrder Response Body: " + response.getBody().asString());
+
+                String ImsID = (String)((JSONObject)((JSONObject)((JSONObject) jsonParser.parse(response.body().asString())).get("data")).get("data")).get("codeOsiris");
+                IMSIdList.add(ImsID);
+                logInfo(logTest, "-----> IMS ID: " + ImsID);
+            }
+
+            return IMSIdList;
+
+        } catch (Exception e) {
+            log4j.error("adminApproveOrder method - ERROR: " + e);
+            logException(logTest, "adminApproveOrder method - ERROR: ", e);
+        }
+        return IMSIdList;
+    }
+
+    public void adminApproveOrder(ExtentTest logTest, String adminToken, ArrayList orderIDList) throws IOException {
+        try {
+
+            for(int i=0; i < orderIDList.size(); i++){
+                String orderID = (String) orderIDList.get(i);
+                RequestSpecification confirmOrder = this.adminConfirmOrder(adminToken);
+                confirmOrder.body(new HashMap<String, Object>() {{
+                    put("remarks", "Notes");
+                }}).log().all();
+                Response response = confirmOrder.patch("/order/" + orderID + "/approve");
+                logInfo(logTest, "-----> adminApproveOrder URI: https://" + GlobalVariables.SellyAdminEnvironment + "/order/" + orderID + "/approve");
+                logInfo(logTest, "-----> adminApproveOrder Response Body: " + response.getBody().asString());
+            }
+        } catch (Exception e) {
+            log4j.error("adminApproveOrder method - ERROR: " + e);
+            logException(logTest, "adminApproveOrder method - ERROR: ", e);
+        }
+    }
+
+    public void adminCancelOrder(ExtentTest logTest, String adminToken) throws IOException {
+        try {
+
+            for(int i=0; i < orderIDList.size(); i++){
+                String orderID = orderIDList.get(i);
+                RequestSpecification confirmOrder = this.adminConfirmOrder(adminToken);
+
+                Response response = confirmOrder.post("/order/" + orderID + "/cancel");
+                logInfo(logTest, "-----> adminCancelOrder Response Body: " + response.getBody().asString());
+            }
+        } catch (Exception e) {
+            log4j.error("adminCancelOrder method - ERROR: " + e);
+            logException(logTest, "adminCancelOrder method - ERROR: ", e);
+        }
+    }
+
+    public ArrayList<String> createMultiOrder(ExtentTest logTest, String sellerToken, JSONObject customer) throws IOException {
         try {
 
             createMultiSessionOrder(logTest, sellerToken);
@@ -137,11 +206,20 @@ public class OrderAPI extends CartAPI{
             logInfo(logTest, "-----> createMultiOrder Request Body: " + payloadObject.toString());
             logInfo(logTest, "-----> createMultiOrder Response Body: " + response.getBody().asString());
 
+            jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
+            JSONArray orderIdArray = (JSONArray) ((JSONObject) jsonBody.get("data")).get("orderIds");
+
+            for(int i=0; i < orderIdArray.size(); i++) {
+                String orderID = (String) orderIdArray.get(i);
+                orderIDList.add(orderID);
+            }
+            return orderIDList;
 
         } catch (Exception e) {
             log4j.error("createMultiOrder method - ERROR: " + e);
             logException(logTest, "createMultiOrder method - ERROR: ", e);
         }
+        return orderIDList;
     }
 
     public JSONArray createMultiDeliverySession(ExtentTest logTest, String sellerToken, JSONObject customer) throws IOException {
@@ -211,7 +289,6 @@ public class OrderAPI extends CartAPI{
         }
         return customerObject;
     }
-
 
     public void createMultiSessionOrder(ExtentTest logTest, String sellerToken) throws IOException {
         try {

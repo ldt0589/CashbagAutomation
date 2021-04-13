@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class Create_Multi_Orders extends TestBase {
+public class Admin_Approve_Orders extends TestBase {
 
     private String sellerToken = null;
     private String adminToken = null;
@@ -40,6 +40,13 @@ public class Create_Multi_Orders extends TestBase {
 
             logStep = logStepInfo(logMethod, "Step #5: Create Multiple Order");
             orderIDList = OrderAPI.createMultiOrder(logStep, sellerToken, customer);
+
+            logStep = logStepInfo(logMethod, "Step #6: Get SELLY Admin Token");
+            adminToken = userAPI.getAdminToken(logStep, GlobalVariables.SellyAdminID);
+
+            logStep = logStepInfo(logMethod, "Step #7: Selly Admin approves orders");
+            OrderAPI.adminApproveOrder(logStep, adminToken, orderIDList);
+
 
         } catch (Exception e) {
             log4j.error(getStackTrade(e.getStackTrace())) ;

@@ -49,9 +49,9 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.7.2'
 }
 
-task hello {
-    println('hello ThangLe')
-}
+//task hello {
+//    println('hello ThangLe')
+//}
 
 test {
 
@@ -62,7 +62,7 @@ test {
     useTestNG() {
 //        suites '/suites/RegressionSuite.xml'
         if (testingtype == 'Regression') {
-            suites '/suites/RegressionSuite.xml'
+            suites '/suites/RegressionSuite2.xml'
         }
     }
 

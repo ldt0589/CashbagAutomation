@@ -26,8 +26,10 @@ public class GlobalVariables {
 
     //SELLY
     public static String SellyEnvironment = "app-api.unibag.xyz";
+    public static String SellyAdminEnvironment = "admin-api.unibag.xyz";
     public static String SellerId = "6012952a45f56d576a800874";
     public static String SellerPhone = "0935321012";
+    public static String SellyAdminID = "6064284d8ef9b2685179a61a";
 
 
     //handling window
