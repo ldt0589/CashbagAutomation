@@ -20,7 +20,7 @@ public class IMS_Deliveried_Orders extends TestBase {
     private CartAPI CartAPI = new CartAPI();
     private OrderAPI OrderAPI = new OrderAPI();
     private JSONObject customer = null;
-    private ArrayList orderIDList = null;
+    private ArrayList SellyOrderIDList = null;
 
     @Test(dataProvider = "getDataForTest", priority = 1, description = "Add multi items into Cart")
     public void TC01(Hashtable<String, String> data) throws IOException {
@@ -39,23 +39,28 @@ public class IMS_Deliveried_Orders extends TestBase {
             customer = OrderAPI.createCustomer(logStep, sellerToken);
 
             logStep = logStepInfo(logMethod, "Step #5: Create Multiple Order");
-            orderIDList = OrderAPI.createMultiOrder(logStep, sellerToken, customer);
+            SellyOrderIDList = OrderAPI.createMultiOrder(logStep, sellerToken, customer);
 
             logStep = logStepInfo(logMethod, "Step #6: Get SELLY Admin Token");
             adminToken = userAPI.getAdminToken(logStep, GlobalVariables.SellyAdminID);
 
             logStep = logStepInfo(logMethod, "Step #7: Selly Admin approves orders");
-            OrderAPI.adminApproveOrder(logStep, adminToken, orderIDList);
+            OrderAPI.adminApproveOrder(logStep, adminToken, SellyOrderIDList);
 
             logStep = logStepInfo(logMethod, "Step #8: IMS confirmed orders");
+            OrderAPI.IMSConfirmOrder(logStep, "confirmed", SellyOrderIDList);
 
             logStep = logStepInfo(logMethod, "Step #9: IMS picking orders");
+            OrderAPI.IMSConfirmOrder(logStep, "picking", SellyOrderIDList);
 
             logStep = logStepInfo(logMethod, "Step #10: IMS picked orders");
+            OrderAPI.IMSConfirmOrder(logStep, "picked", SellyOrderIDList);
 
             logStep = logStepInfo(logMethod, "Step #11: IMS delivering orders");
+            OrderAPI.IMSConfirmOrder(logStep, "delivering", SellyOrderIDList);
 
             logStep = logStepInfo(logMethod, "Step #12: IMS delivered orders");
+            OrderAPI.IMSConfirmOrder(logStep, "delivered", SellyOrderIDList);
 
 
         } catch (Exception e) {

@@ -27,6 +27,7 @@ public class OrderAPI extends CartAPI{
     private JSONParser jsonParser = new JSONParser();
     private JSONObject responseObject = null;
     private JSONObject customerObject = null;
+    private JSONArray OrderIDsArray = null;
     private String customerID = null;
     private String locationID = null;
     public static ArrayList<String> sessionIDList = new ArrayList<String>();
@@ -84,6 +85,23 @@ public class OrderAPI extends CartAPI{
                 relaxedHTTPSValidation();
     }
 
+    private RequestSpecification getIMSOrderList() {
+        return given().
+                baseUri("https://" + GlobalVariables.ImsEnvironment).
+                header("Authorization", "Bearer " + GlobalVariables.IMSToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
+    private RequestSpecification IMSConfirmOrder() {
+        return given().
+                baseUri("https://" + GlobalVariables.ImsDeliveryEnvironment).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
     private RequestSpecification adminConfirmOrder(String adminToken) {
         return given().
                 baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
@@ -106,30 +124,123 @@ public class OrderAPI extends CartAPI{
         return data;
     }
 
-    public ArrayList getIMSOrderIDs(ExtentTest logTest, String adminToken, ArrayList orderIDList) throws IOException {
+    public ArrayList<String> getIMSIdList(ExtentTest logTest, ArrayList SellyOrderIDList) throws IOException {
+
         try {
 
-            for(int i=0; i < orderIDList.size(); i++){
+            for (int i = 0; i < SellyOrderIDList.size(); i++) {
 
-                String OrderID = (String) orderIDList.get(i);
-                RequestSpecification getOrderDetail = this.getOrderDetail(adminToken);
+                String OrderID = (String) SellyOrderIDList.get(i);
+                RequestSpecification getOrderDetail = this.getOrderDetail(GlobalVariables.SellyAdminToken);
                 Response response = getOrderDetail.get("/order/" + OrderID + "/items");
 
                 logInfo(logTest, "-----> adminApproveOrder URI: https://" + GlobalVariables.SellyAdminEnvironment + "/order/" + OrderID + "/approve");
                 logInfo(logTest, "-----> adminApproveOrder Response Body: " + response.getBody().asString());
 
-                String ImsID = (String)((JSONObject)((JSONObject)((JSONObject) jsonParser.parse(response.body().asString())).get("data")).get("data")).get("codeOsiris");
+                String ImsID = (String) ((JSONObject) ((JSONObject) ((JSONObject) jsonParser.parse(response.body().asString())).get("data")).get("data")).get("codeOsiris");
+
                 IMSIdList.add(ImsID);
-                logInfo(logTest, "-----> IMS ID: " + ImsID);
+
+                logInfo(logTest, "-----> IMS Id List: " + IMSIdList.toString());
             }
 
             return IMSIdList;
 
         } catch (Exception e) {
-            log4j.error("adminApproveOrder method - ERROR: " + e);
-            logException(logTest, "adminApproveOrder method - ERROR: ", e);
+            log4j.error("getIMSIdList method - ERROR: " + e);
+            logException(logTest, "getIMSIdList method - ERROR: ", e);
         }
         return IMSIdList;
+    }
+
+    public JSONArray getIMSOrderIdArray(ExtentTest logTest, ArrayList SellyOrderIDList) throws IOException {
+
+        try {
+
+            ArrayList<String> IMSIDs = getIMSIdList(logTest, SellyOrderIDList);
+
+            OrderIDsArray = new JSONArray();
+            RequestSpecification getIMSOrderList = this.getIMSOrderList();
+            Response response = getIMSOrderList.get("/admin/order");
+            jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
+            JSONArray OrderArray_response = (JSONArray) ((JSONObject) jsonBody.get("data")).get("data");
+
+            for (int i = 0; i < IMSIDs.size(); i++) {
+                String ImsID_actual= IMSIDs.get(i);
+                String ImsID_expected = (String) ((JSONObject) OrderArray_response.get(i)).get("code");
+
+                if(ImsID_actual.equals(ImsID_expected)){
+                    String IMSOrderID = (String) ((JSONObject) OrderArray_response.get(i)).get("_id");
+                    JSONObject deliveryObject = (JSONObject) ((JSONObject) OrderArray_response.get(i)).get("delivery");
+
+                    JSONObject orderIDObject = new JSONObject();
+                    orderIDObject.put("ImsID", ImsID_actual);
+                    orderIDObject.put("trackingCode", deliveryObject.get("trackingCode"));
+                    orderIDObject.put("IMSOrderID", IMSOrderID);
+                    OrderIDsArray.add(orderIDObject);
+
+                }
+
+                logInfo(logTest, "-----> getIMSOrderIdArray Response Body: " + response.getBody().asString());
+                logInfo(logTest, "-----> OrderIDsArray: " + OrderIDsArray.toString());
+            }
+
+            return OrderIDsArray;
+
+        } catch (Exception e) {
+            log4j.error("getIMSOrderIdArray method - ERROR: " + e);
+            logException(logTest, "getIMSOrderIdArray method - ERROR: ", e);
+        }
+        return OrderIDsArray;
+    }
+
+    public void IMSConfirmOrder(ExtentTest logTest, String status, ArrayList SellyOrderIDList) throws IOException {
+
+        try {
+            String deliveryCode = null;
+
+            switch (status) {
+                case "confirmed":
+                    deliveryCode = "200";
+                    break;
+                case "cancelled":
+                    deliveryCode = "700";
+                    break;
+                case "picking":
+                    deliveryCode = "201";
+                    break;
+                case "picked":
+                    deliveryCode = "300";
+                    break;
+                case "delivering":
+                    deliveryCode = "304";
+                    break;
+                case "delivered":
+                    deliveryCode = "800";
+                    break;
+                default:
+                    // nothing
+            }
+
+            JSONArray IMSArrayList = getIMSOrderIdArray(logTest, SellyOrderIDList);
+            for (int i = 0; i < IMSArrayList.size(); i++) {
+                String IMSID = (String) ((JSONObject) IMSArrayList.get(i)).get("ImsID");
+                String trackingCode = (String) ((JSONObject) IMSArrayList.get(i)).get("trackingCode");
+                RequestSpecification IMSConfirmOrder = this.IMSConfirmOrder();
+                String finalDeliveryCode = deliveryCode;
+                IMSConfirmOrder.body(new HashMap<String, Object>() {{
+                    put("TrackingCode", trackingCode);
+                    put("StatusCode", finalDeliveryCode);
+                    put("OrderCode", IMSID);
+                }}).log().all();
+                Response response = IMSConfirmOrder.patch("/api/webhook/boxme/delivery-status");
+                logInfo(logTest, "-----> IMSConfirmOrder Response Body: " + response.getBody().asString());
+            }
+
+        } catch (Exception e) {
+            log4j.error("IMSConfirmOrder method - ERROR: " + e);
+            logException(logTest, "IMSConfirmOrder method - ERROR: ", e);
+        }
     }
 
     public void adminApproveOrder(ExtentTest logTest, String adminToken, ArrayList orderIDList) throws IOException {
@@ -148,22 +259,6 @@ public class OrderAPI extends CartAPI{
         } catch (Exception e) {
             log4j.error("adminApproveOrder method - ERROR: " + e);
             logException(logTest, "adminApproveOrder method - ERROR: ", e);
-        }
-    }
-
-    public void adminCancelOrder(ExtentTest logTest, String adminToken) throws IOException {
-        try {
-
-            for(int i=0; i < orderIDList.size(); i++){
-                String orderID = orderIDList.get(i);
-                RequestSpecification confirmOrder = this.adminConfirmOrder(adminToken);
-
-                Response response = confirmOrder.post("/order/" + orderID + "/cancel");
-                logInfo(logTest, "-----> adminCancelOrder Response Body: " + response.getBody().asString());
-            }
-        } catch (Exception e) {
-            log4j.error("adminCancelOrder method - ERROR: " + e);
-            logException(logTest, "adminCancelOrder method - ERROR: ", e);
         }
     }
 

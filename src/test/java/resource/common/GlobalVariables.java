@@ -27,6 +27,10 @@ public class GlobalVariables {
     //SELLY
     public static String SellyEnvironment = "app-api.unibag.xyz";
     public static String SellyAdminEnvironment = "admin-api.unibag.xyz";
+    public static String SellyAdminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDY0Mjg0ZDhlZjliMjY4NTE3OWE2MWEiLCJleHAiOjE2MzM4NzkyNTksIm5hbWUiOiJSb290IiwicGVybWlzc2lvbnMiOltdLCJwaG9uZSI6Iis4NDc2Mzc3MDg2OSIsInR5cGUiOiJzdGFmZiJ9.sz9mUJssECBEK25zNc2SFvneM_K6Zu1dzo_XT9CRtls";
+    public static String ImsDeliveryEnvironment = "delivery.sellyims.net";
+    public static String ImsEnvironment = "order.sellyims.net";
+    public static String IMSToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDU4NDAzNzM1OGQzMjJlZDZiNzA3NjMiLCJhdmF0YXIiOiJodHRwczovL3NlbGx5LWltcy1kZXZlbG9wLnMzLWFwLXNvdXRoZWFzdC0xLmFtYXpvbmF3cy5jb20vMzg2ODc2Mjg3MzMxXzE2MTYzOTY3MzUxOTAuanBnIiwiZXhwIjoxNjMzODc3MzczLCJpc1Jvb3QiOnRydWUsIm5hbWUiOiJSb290IiwicGFydG5lciI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsInBlcm1pc3Npb25zIjpbXSwicGhvbmUiOiIrODQ3NjM3NzA4NjkiLCJ0eXBlIjoiaW1zIiwidXNlciI6IjYwNTg0MDM3MzU4ZDMyMmVkNmI3MDc2MSJ9.ubRpoJdcXGJSyaOd1oyx-cbTBUrPs14Mf7-_zCed7ns";
     public static String SellerId = "6012952a45f56d576a800874";
     public static String SellerPhone = "0935321012";
     public static String SellyAdminID = "6064284d8ef9b2685179a61a";
