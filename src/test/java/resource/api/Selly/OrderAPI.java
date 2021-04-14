@@ -313,7 +313,7 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public void veryfySellyOrderStatus(ExtentTest logTest, ArrayList orderIDList, String OrderStatus_expected, String sellerToken) throws IOException {
+    public void verifySellyOrderStatus(ExtentTest logTest, ArrayList orderIDList, String OrderStatus_expected, String sellerToken) throws IOException {
         try {
 
             for(int i=0; i < orderIDList.size(); i++){
@@ -334,7 +334,7 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public void veryfyIMSOrderStatus(ExtentTest logTest, JSONArray IMSIdArray, String IMSOrderStatus_expected) throws IOException {
+    public void verifyIMSOrderStatus(ExtentTest logTest, JSONArray IMSIdArray, String IMSOrderStatus_expected) throws IOException {
         try {
 
             for(int i=0; i < IMSIdArray.size(); i++){
