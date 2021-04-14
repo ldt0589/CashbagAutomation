@@ -45,7 +45,7 @@ public class Admin_Approve_Orders extends TestBase {
             adminToken = userAPI.getAdminToken(logStep, GlobalVariables.SellyAdminID);
 
             logStep = logStepInfo(logMethod, "Step #7: Selly Admin approves orders");
-            OrderAPI.adminApproveOrder(logStep, adminToken, orderIDList);
+            OrderAPI.adminApproveOrder(logStep, orderIDList);
 
 
         } catch (Exception e) {

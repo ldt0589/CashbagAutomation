@@ -27,16 +27,18 @@ public class OrderAPI extends CartAPI{
     private JSONParser jsonParser = new JSONParser();
     private JSONObject responseObject = null;
     private JSONObject customerObject = null;
-    private JSONArray OrderIDsArray = null;
+    private JSONArray OrderIDsArray = new JSONArray();
+    private JSONArray IMSArrayList = null;
     private String customerID = null;
     private String locationID = null;
     public static ArrayList<String> sessionIDList = new ArrayList<String>();
-    public static ArrayList<String> IMSIdList = new ArrayList<String>();
+    public static ArrayList<String> IMSIdList = null;
     public static ArrayList<String> orderIDList = new ArrayList<String>();
     public static ArrayList<String> sessionOrderIDList = new ArrayList<String>();
     public static ArrayList<String> deliverySessionIDList = new ArrayList<String>();
     public static ArrayList<String> orderIDs = null;
     public static String sessionKey = null;
+    private ArrayList<String> IMSIDs = null;
     private String checksum = "SmaAalemakwAskd";
     private String payloadString;
 
@@ -85,7 +87,25 @@ public class OrderAPI extends CartAPI{
                 relaxedHTTPSValidation();
     }
 
+    private RequestSpecification getAppOrderDetail(String sellerToken) {
+        return given().
+                baseUri("https://" + GlobalVariables.SellyEnvironment).
+                header("Authorization", "Bearer " + sellerToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
     private RequestSpecification getIMSOrderList() {
+        return given().
+                baseUri("https://" + GlobalVariables.ImsEnvironment).
+                header("Authorization", "Bearer " + GlobalVariables.IMSToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
+    private RequestSpecification getIMSOrderDetail() {
         return given().
                 baseUri("https://" + GlobalVariables.ImsEnvironment).
                 header("Authorization", "Bearer " + GlobalVariables.IMSToken).
@@ -102,10 +122,19 @@ public class OrderAPI extends CartAPI{
                 relaxedHTTPSValidation();
     }
 
-    private RequestSpecification adminConfirmOrder(String adminToken) {
+    private RequestSpecification IMSApproveOrder() {
+        return given().
+                baseUri("https://" + GlobalVariables.ImsEnvironment).
+                header("Authorization", "Bearer " + GlobalVariables.IMSToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
+    private RequestSpecification adminConfirmOrder() {
         return given().
                 baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
-                header("Authorization", "Bearer " + adminToken).
+                header("Authorization", "Bearer " + GlobalVariables.SellyAdminToken).
                 header("Content-Type","application/json").
                 contentType("application/json").
         relaxedHTTPSValidation();
@@ -127,6 +156,7 @@ public class OrderAPI extends CartAPI{
     public ArrayList<String> getIMSIdList(ExtentTest logTest, ArrayList SellyOrderIDList) throws IOException {
 
         try {
+            IMSIdList = new ArrayList<>();
 
             for (int i = 0; i < SellyOrderIDList.size(); i++) {
 
@@ -134,8 +164,7 @@ public class OrderAPI extends CartAPI{
                 RequestSpecification getOrderDetail = this.getOrderDetail(GlobalVariables.SellyAdminToken);
                 Response response = getOrderDetail.get("/order/" + OrderID + "/items");
 
-                logInfo(logTest, "-----> adminApproveOrder URI: https://" + GlobalVariables.SellyAdminEnvironment + "/order/" + OrderID + "/approve");
-                logInfo(logTest, "-----> adminApproveOrder Response Body: " + response.getBody().asString());
+                logInfo(logTest, "-----> getOrderDetail Response Body: " + response.getBody().asString());
 
                 String ImsID = (String) ((JSONObject) ((JSONObject) ((JSONObject) jsonParser.parse(response.body().asString())).get("data")).get("data")).get("codeOsiris");
 
@@ -156,8 +185,8 @@ public class OrderAPI extends CartAPI{
     public JSONArray getIMSOrderIdArray(ExtentTest logTest, ArrayList SellyOrderIDList) throws IOException {
 
         try {
-
-            ArrayList<String> IMSIDs = getIMSIdList(logTest, SellyOrderIDList);
+            IMSIDs = new ArrayList<>();
+            IMSIDs = getIMSIdList(logTest, SellyOrderIDList);
 
             OrderIDsArray = new JSONArray();
             RequestSpecification getIMSOrderList = this.getIMSOrderList();
@@ -180,10 +209,9 @@ public class OrderAPI extends CartAPI{
                     OrderIDsArray.add(orderIDObject);
 
                 }
-
-                logInfo(logTest, "-----> getIMSOrderIdArray Response Body: " + response.getBody().asString());
-                logInfo(logTest, "-----> OrderIDsArray: " + OrderIDsArray.toString());
             }
+            logInfo(logTest, "-----> getIMSOrderIdArray Response Body: " + response.getBody().asString());
+            logInfo(logTest, "-----> OrderIDsArray: " + OrderIDsArray.toString());
 
             return OrderIDsArray;
 
@@ -194,47 +222,70 @@ public class OrderAPI extends CartAPI{
         return OrderIDsArray;
     }
 
-    public void IMSConfirmOrder(ExtentTest logTest, String status, ArrayList SellyOrderIDList) throws IOException {
+    public void IMSApproveOrder(ExtentTest logTest, ArrayList IMSIDList) throws IOException {
 
         try {
-            String deliveryCode = null;
+
+            JSONArray IMSArrayList = getIMSOrderIdArray(logTest, IMSIDList);
+
+            for (int i = 0; i < IMSArrayList.size(); i++) {
+
+                String ISMOrderID = (String) ((JSONObject) IMSArrayList.get(i)).get("IMSOrderID");
+
+                RequestSpecification IMSApproveOrder = this.IMSApproveOrder();
+                Response response = IMSApproveOrder.patch("admin/order/" + ISMOrderID + "/approved");
+                logInfo(logTest, "-----> IMSApproveOrder Request URL: https://" + GlobalVariables.ImsEnvironment + "admin/order/" + ISMOrderID + "/approved");
+
+            }
+
+        } catch (Exception e) {
+            log4j.error("IMSApproveOrder method - ERROR: " + e);
+            logException(logTest, "IMSApproveOrder method - ERROR: ", e);
+        }
+    }
+
+    public void IMSConfirmOrder(ExtentTest logTest, String status, JSONArray IMSArrayList) throws IOException {
+
+        try {
+            int deliveryCode = 0;
 
             switch (status) {
-                case "confirmed":
-                    deliveryCode = "200";
-                    break;
                 case "cancelled":
-                    deliveryCode = "700";
+                    deliveryCode = 700;
                     break;
                 case "picking":
-                    deliveryCode = "201";
+                    deliveryCode = 201;
                     break;
                 case "picked":
-                    deliveryCode = "300";
+                    deliveryCode = 300;
                     break;
                 case "delivering":
-                    deliveryCode = "304";
+                    deliveryCode = 304;
                     break;
                 case "delivered":
-                    deliveryCode = "800";
+                    deliveryCode = 800;
                     break;
                 default:
                     // nothing
             }
 
-            JSONArray IMSArrayList = getIMSOrderIdArray(logTest, SellyOrderIDList);
             for (int i = 0; i < IMSArrayList.size(); i++) {
+
                 String IMSID = (String) ((JSONObject) IMSArrayList.get(i)).get("ImsID");
                 String trackingCode = (String) ((JSONObject) IMSArrayList.get(i)).get("trackingCode");
+                int finalDeliveryCode = deliveryCode;
+
                 RequestSpecification IMSConfirmOrder = this.IMSConfirmOrder();
-                String finalDeliveryCode = deliveryCode;
                 IMSConfirmOrder.body(new HashMap<String, Object>() {{
                     put("TrackingCode", trackingCode);
                     put("StatusCode", finalDeliveryCode);
                     put("OrderCode", IMSID);
                 }}).log().all();
-                Response response = IMSConfirmOrder.patch("/api/webhook/boxme/delivery-status");
+                Response response = IMSConfirmOrder.post("/api/webhook/boxme/delivery-status");
+                logInfo(logTest, "-----> IMSConfirmOrder Request URL: https://" + GlobalVariables.ImsDeliveryEnvironment + "/api/webhook/boxme/delivery-status");
+                logInfo(logTest, "-----> IMSConfirmOrder Request Body: \n{TrackingCode:" + trackingCode + "\nStatusCode:" + finalDeliveryCode+ "\nOrderCode:" + IMSID + "}");
                 logInfo(logTest, "-----> IMSConfirmOrder Response Body: " + response.getBody().asString());
+
             }
 
         } catch (Exception e) {
@@ -243,12 +294,12 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public void adminApproveOrder(ExtentTest logTest, String adminToken, ArrayList orderIDList) throws IOException {
+    public void adminApproveOrder(ExtentTest logTest, ArrayList orderIDList) throws IOException {
         try {
 
             for(int i=0; i < orderIDList.size(); i++){
                 String orderID = (String) orderIDList.get(i);
-                RequestSpecification confirmOrder = this.adminConfirmOrder(adminToken);
+                RequestSpecification confirmOrder = this.adminConfirmOrder();
                 confirmOrder.body(new HashMap<String, Object>() {{
                     put("remarks", "Notes");
                 }}).log().all();
@@ -259,6 +310,50 @@ public class OrderAPI extends CartAPI{
         } catch (Exception e) {
             log4j.error("adminApproveOrder method - ERROR: " + e);
             logException(logTest, "adminApproveOrder method - ERROR: ", e);
+        }
+    }
+
+    public void veryfySellyOrderStatus(ExtentTest logTest, ArrayList orderIDList, String OrderStatus_expected, String sellerToken) throws IOException {
+        try {
+
+            for(int i=0; i < orderIDList.size(); i++){
+                String orderID_expected = (String) orderIDList.get(i);
+                RequestSpecification getAppOrderDetail = this.getAppOrderDetail(sellerToken);
+                Response response = getAppOrderDetail.get("/order/" + orderID_expected);
+
+                jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
+                String orderID_actual = (String) ((JSONObject) ((JSONObject) jsonBody.get("data")).get("order")).get("_id");
+                String OrderStatus_actual = (String) ((JSONObject) ((JSONObject) jsonBody.get("data")).get("order")).get("status");
+
+                verifyExpectedAndActualResults(logTest, orderID_actual, orderID_expected);
+                verifyExpectedAndActualResults(logTest, OrderStatus_expected, OrderStatus_actual);
+            }
+        } catch (Exception e) {
+            log4j.error("veryfySellyOrderStatus method - ERROR: " + e);
+            logException(logTest, "veryfySellyOrderStatus method - ERROR: ", e);
+        }
+    }
+
+    public void veryfyIMSOrderStatus(ExtentTest logTest, JSONArray IMSIdArray, String IMSOrderStatus_expected) throws IOException {
+        try {
+
+            for(int i=0; i < IMSIdArray.size(); i++){
+                JSONObject IMSOrderObject = (JSONObject) IMSIdArray.get(i);
+                String IMSOrderID_expected = (String) IMSOrderObject.get("IMSOrderID");
+
+                RequestSpecification getIMSOrderDetail = this.getIMSOrderDetail();
+                Response response = getIMSOrderDetail.get("/admin/order/" + IMSOrderID_expected);
+
+                jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
+                String IMSOrderID_actual = (String) ((JSONObject) jsonBody.get("data")).get("_id");
+                String IMSOrderStatus_actual = (String) ((JSONObject) jsonBody.get("data")).get("status");
+
+                verifyExpectedAndActualResults(logTest, IMSOrderID_expected, IMSOrderID_actual);
+                verifyExpectedAndActualResults(logTest, IMSOrderStatus_expected, IMSOrderStatus_actual);
+            }
+        } catch (Exception e) {
+            log4j.error("veryfyIMSOrderStatus method - ERROR: " + e);
+            logException(logTest, "veryfyIMSOrderStatus method - ERROR: ", e);
         }
     }
 

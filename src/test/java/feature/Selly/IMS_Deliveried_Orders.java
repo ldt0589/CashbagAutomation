@@ -1,5 +1,6 @@
 package feature.Selly;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.annotations.Test;
 import resource.api.Selly.CartAPI;
@@ -21,6 +22,7 @@ public class IMS_Deliveried_Orders extends TestBase {
     private OrderAPI OrderAPI = new OrderAPI();
     private JSONObject customer = null;
     private ArrayList SellyOrderIDList = null;
+    private JSONArray IMSArrayList = null;
 
     @Test(dataProvider = "getDataForTest", priority = 1, description = "Add multi items into Cart")
     public void TC01(Hashtable<String, String> data) throws IOException {
@@ -41,26 +43,27 @@ public class IMS_Deliveried_Orders extends TestBase {
             logStep = logStepInfo(logMethod, "Step #5: Create Multiple Order");
             SellyOrderIDList = OrderAPI.createMultiOrder(logStep, sellerToken, customer);
 
-            logStep = logStepInfo(logMethod, "Step #6: Get SELLY Admin Token");
-            adminToken = userAPI.getAdminToken(logStep, GlobalVariables.SellyAdminID);
+            logStep = logStepInfo(logMethod, "Step #6: Selly Admin APPROVE orders");
+            OrderAPI.adminApproveOrder(logStep, SellyOrderIDList);
+            OrderAPI.veryfySellyOrderStatus(logStep, SellyOrderIDList, "pending", sellerToken);
 
-            logStep = logStepInfo(logMethod, "Step #7: Selly Admin approves orders");
-            OrderAPI.adminApproveOrder(logStep, adminToken, SellyOrderIDList);
+            logStep = logStepInfo(logMethod, "Step #7: IMS APPROVE orders");
+            OrderAPI.IMSApproveOrder(logStep, SellyOrderIDList);
 
-            logStep = logStepInfo(logMethod, "Step #8: IMS confirmed orders");
-            OrderAPI.IMSConfirmOrder(logStep, "confirmed", SellyOrderIDList);
+            logStep = logStepInfo(logMethod, "Step #8: Get IMS IDs Array");
+            IMSArrayList = OrderAPI.getIMSOrderIdArray(logStep, SellyOrderIDList);
 
-            logStep = logStepInfo(logMethod, "Step #9: IMS picking orders");
-            OrderAPI.IMSConfirmOrder(logStep, "picking", SellyOrderIDList);
+            logStep = logStepInfo(logMethod, "Step #9: IMS PICKING orders");
+            OrderAPI.IMSConfirmOrder(logStep, "picking", IMSArrayList);
 
-            logStep = logStepInfo(logMethod, "Step #10: IMS picked orders");
-            OrderAPI.IMSConfirmOrder(logStep, "picked", SellyOrderIDList);
+            logStep = logStepInfo(logMethod, "Step #09: IMS PICKED orders");
+            OrderAPI.IMSConfirmOrder(logStep, "picked", IMSArrayList);
 
-            logStep = logStepInfo(logMethod, "Step #11: IMS delivering orders");
-            OrderAPI.IMSConfirmOrder(logStep, "delivering", SellyOrderIDList);
+            logStep = logStepInfo(logMethod, "Step #10: IMS DELIVERING orders");
+            OrderAPI.IMSConfirmOrder(logStep, "delivering", IMSArrayList);
 
-            logStep = logStepInfo(logMethod, "Step #12: IMS delivered orders");
-            OrderAPI.IMSConfirmOrder(logStep, "delivered", SellyOrderIDList);
+            logStep = logStepInfo(logMethod, "Step #11: IMS DELIVERED orders");
+            OrderAPI.IMSConfirmOrder(logStep, "delivered", IMSArrayList);
 
 
         } catch (Exception e) {
