@@ -78,10 +78,10 @@ public class OrderAPI extends CartAPI{
         relaxedHTTPSValidation();
     }
 
-    private RequestSpecification getOrderDetail(String adminToken) {
+    private RequestSpecification getOrderDetail() {
         return given().
                 baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
-                header("Authorization", "Bearer " + adminToken).
+                header("Authorization", "Bearer " + GlobalVariables.SellyAdminToken).
                 header("Content-Type","application/json").
                 contentType("application/json").
                 relaxedHTTPSValidation();
@@ -161,7 +161,7 @@ public class OrderAPI extends CartAPI{
             for (int i = 0; i < SellyOrderIDList.size(); i++) {
 
                 String OrderID = (String) SellyOrderIDList.get(i);
-                RequestSpecification getOrderDetail = this.getOrderDetail(GlobalVariables.SellyAdminToken);
+                RequestSpecification getOrderDetail = this.getOrderDetail();
                 Response response = getOrderDetail.get("/order/" + OrderID + "/items");
 
                 logInfo(logTest, "-----> getOrderDetail Response Body: " + response.getBody().asString());
@@ -251,7 +251,7 @@ public class OrderAPI extends CartAPI{
 
             switch (status) {
                 case "cancelled":
-                    deliveryCode = 700;
+                    deliveryCode = 701;
                     break;
                 case "picking":
                     deliveryCode = 201;
@@ -313,24 +313,28 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public void verifySellyOrderStatus(ExtentTest logTest, ArrayList orderIDList, String OrderStatus_expected, String sellerToken) throws IOException {
+    public void verifySellyOrderStatus(ExtentTest logTest, ArrayList orderIDList, String deliveryStatus_expected, String orderStatus_expected) throws IOException {
         try {
 
             for(int i=0; i < orderIDList.size(); i++){
-                String orderID_expected = (String) orderIDList.get(i);
-                RequestSpecification getAppOrderDetail = this.getAppOrderDetail(sellerToken);
-                Response response = getAppOrderDetail.get("/order/" + orderID_expected);
+                String orderID = (String) orderIDList.get(i);
+                RequestSpecification getOrderDetail = this.getOrderDetail();
+                Response response = getOrderDetail.get("/order/" + orderID + "/items");
 
-                jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
-                String orderID_actual = (String) ((JSONObject) ((JSONObject) jsonBody.get("data")).get("order")).get("_id");
-                String OrderStatus_actual = (String) ((JSONObject) ((JSONObject) jsonBody.get("data")).get("order")).get("status");
+                if(response.getStatusCode() == 200) {
+                    jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
+                    String orderStatus_actual = (String) ((JSONObject) ((JSONObject) jsonBody.get("data")).get("data")).get("status");
+                    String deliveryStatus_actual = (String) ((JSONObject)((JSONObject) ((JSONObject) jsonBody.get("data")).get("data")).get("delivery")).get("status");
 
-                verifyExpectedAndActualResults(logTest, orderID_actual, orderID_expected);
-                verifyExpectedAndActualResults(logTest, OrderStatus_expected, OrderStatus_actual);
+                    verifyExpectedAndActualResults(logTest, orderStatus_expected, orderStatus_actual);
+                    verifyExpectedAndActualResults(logTest, deliveryStatus_expected, deliveryStatus_actual);
+                }else {
+                    logInfo(logTest, "-----> ORDER NOT FOUND" + response.getBody().asString());
+                }
             }
         } catch (Exception e) {
-            log4j.error("veryfySellyOrderStatus method - ERROR: " + e);
-            logException(logTest, "veryfySellyOrderStatus method - ERROR: ", e);
+            log4j.error("verifySellyOrderStatus method - ERROR: " + e);
+            logException(logTest, "verifySellyOrderStatus method - ERROR: ", e);
         }
     }
 
