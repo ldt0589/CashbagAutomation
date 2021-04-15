@@ -7,7 +7,7 @@
     <test name="test1">
         <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="feature.Selly.Admin_Approve_Orders"/>
+            <class name="feature.Selly.Selly_03_Approve_Orders"/>
         </classes>
     </test>
 </suite>

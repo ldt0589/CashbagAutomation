@@ -222,11 +222,11 @@ public class OrderAPI extends CartAPI{
         return OrderIDsArray;
     }
 
-    public void IMSApproveOrder(ExtentTest logTest, ArrayList IMSIDList) throws IOException {
+    public void IMSApproveOrder(ExtentTest logTest, JSONArray IMSArrayList) throws IOException {
 
         try {
 
-            JSONArray IMSArrayList = getIMSOrderIdArray(logTest, IMSIDList);
+//            JSONArray IMSArrayList = getIMSOrderIdArray(logTest, IMSIDList);
 
             for (int i = 0; i < IMSArrayList.size(); i++) {
 
@@ -235,6 +235,7 @@ public class OrderAPI extends CartAPI{
                 RequestSpecification IMSApproveOrder = this.IMSApproveOrder();
                 Response response = IMSApproveOrder.patch("admin/order/" + ISMOrderID + "/approved");
                 logInfo(logTest, "-----> IMSApproveOrder Request URL: https://" + GlobalVariables.ImsEnvironment + "admin/order/" + ISMOrderID + "/approved");
+                logInfo(logTest, "-----> IMSApproveOrder Response: " + response.getBody().asString());
 
             }
 
@@ -244,7 +245,7 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public void IMSConfirmOrder(ExtentTest logTest, String status, JSONArray IMSArrayList) throws IOException {
+    public void IMSConfirmOrder(ExtentTest logTest, JSONArray IMSArrayList, String status) throws IOException {
 
         try {
             int deliveryCode = 0;
@@ -294,7 +295,7 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public void adminApproveOrder(ExtentTest logTest, ArrayList orderIDList) throws IOException {
+    public void SellyApproveOrder(ExtentTest logTest, ArrayList orderIDList) throws IOException {
         try {
 
             for(int i=0; i < orderIDList.size(); i++){
