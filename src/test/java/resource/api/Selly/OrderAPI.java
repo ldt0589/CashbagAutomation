@@ -349,12 +349,14 @@ public class OrderAPI extends CartAPI{
                 RequestSpecification getIMSOrderDetail = this.getIMSOrderDetail();
                 Response response = getIMSOrderDetail.get("/admin/order/" + IMSOrderID_expected);
 
-                jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
-                String IMSOrderID_actual = (String) ((JSONObject) jsonBody.get("data")).get("_id");
-                String IMSOrderStatus_actual = (String) ((JSONObject) jsonBody.get("data")).get("status");
+                if(response.getStatusCode() == 200) {
 
-                verifyExpectedAndActualResults(logTest, IMSOrderID_expected, IMSOrderID_actual);
-                verifyExpectedAndActualResults(logTest, IMSOrderStatus_expected, IMSOrderStatus_actual);
+                    jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
+                    String IMSOrderStatus_actual = (String) ((JSONObject) jsonBody.get("data")).get("status");
+                    verifyExpectedAndActualResults(logTest, IMSOrderStatus_expected, IMSOrderStatus_actual);
+                }else{
+                    logInfo(logTest, "-----> ORDER NOT FOUND" + response.getBody().asString());
+                }
             }
         } catch (Exception e) {
             log4j.error("veryfyIMSOrderStatus method - ERROR: " + e);

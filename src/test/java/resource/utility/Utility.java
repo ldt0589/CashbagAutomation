@@ -7,40 +7,29 @@ import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.google.gson.*;
-import resource.utility.webdrivers.DriverFactory;
-import io.restassured.RestAssured;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.SkipException;
 import resource.common.GlobalVariables;
+import resource.utility.webdrivers.DriverFactory;
 
-import java.io.*;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Utility {
     public static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<RemoteWebDriver>();
@@ -214,9 +203,9 @@ public class Utility {
     public static void logFail(ExtentTest logTest, String description) throws IOException {
         try {
             // Report test fails and capture screenshot
-            captureScreenshot("FAILED screenshot: ", "fail-", logTest);
-
-        throw new SkipException(description);
+//            captureScreenshot("FAILED screenshot: ", "fail-", logTest);
+            logTest.fail(MarkupHelper.createLabel(description, ExtentColor.RED));
+//        throw new SkipException(description);
         } catch (SkipException ex) {
             logTest.fail(MarkupHelper.createLabel(description + "</br>" + getStackTrade(ex.getStackTrace()), ExtentColor.RED));
             Assert.fail(description);
