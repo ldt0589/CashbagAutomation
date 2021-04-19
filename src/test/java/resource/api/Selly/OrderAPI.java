@@ -132,6 +132,24 @@ public class OrderAPI extends CartAPI{
                 relaxedHTTPSValidation();
     }
 
+    private RequestSpecification SellyGetDeliveryList() {
+        return given().
+                baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
+                header("Authorization", "Bearer " + GlobalVariables.SellyAdminToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
+    private RequestSpecification SellyUpdateDeliveryService() {
+        return given().
+                baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
+                header("Authorization", "Bearer " + GlobalVariables.SellyAdminToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
     private RequestSpecification adminConfirmOrder() {
         return given().
                 baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
@@ -221,6 +239,48 @@ public class OrderAPI extends CartAPI{
             logException(logTest, "getIMSOrderIdArray method - ERROR: ", e);
         }
         return OrderIDsArray;
+    }
+
+    public void SellyUpdateDeliveryService(ExtentTest logTest, ArrayList SellyOrderIdList, String courierName_new) throws IOException {
+        try {
+
+            for (int i = 0; i < SellyOrderIdList.size(); i++) {
+
+                String SellyOrderID = (String) SellyOrderIdList.get(i);
+
+                RequestSpecification SellyGetDeliveryList = this.SellyGetDeliveryList();
+                Response response = SellyGetDeliveryList.get("order/" + SellyOrderID + "/deliveries");
+                sleep(1);
+                logInfo(logTest, "-----> get Selly Delivery Service List Request URL: https://" + GlobalVariables.SellyAdminEnvironment + "order/" + SellyOrderID + "/deliveries");
+                logInfo(logTest, "-----> get Selly Delivery Service List Response: " + response.getBody().asString());
+
+                JSONObject responseBody = new JSONObject();
+                responseBody = (JSONObject) jsonParser.parse(response.body().asString());
+                JSONArray SellyDeliveryServiceList = (JSONArray) ((JSONObject) responseBody.get("data")).get("deliveries");
+
+                for (int x = 0; x < SellyDeliveryServiceList.size(); x++){
+                    String courier_name = (String)((JSONObject)((JSONObject) SellyDeliveryServiceList.get(x)).get("information")).get("courier_name");
+                    String session_delivery = (String) ((JSONObject) SellyDeliveryServiceList.get(x)).get("session");
+                    if (courier_name.equals(courierName_new)){
+                        RequestSpecification SellyUpdateDeliveryService = this.SellyUpdateDeliveryService();
+                        SellyUpdateDeliveryService.body(new HashMap<String, Object>() {{
+                            put("sessionDelivery", session_delivery);
+                        }}).log().all();
+                        Response updateDelivery_Response = SellyUpdateDeliveryService.put("order/" + SellyOrderID + "/deliveries");
+                        sleep(1);
+                        logInfo(logTest, "-----> Update Selly Delivery Service Request URL: https://" + GlobalVariables.SellyAdminEnvironment + "order/" + SellyOrderID + "/deliveries");
+                        logInfo(logTest, "-----> Update Selly Delivery Service Response: " + updateDelivery_Response.getBody().asString());
+                    }else if(x == (SellyDeliveryServiceList.size()-1)){
+                        throw new SkipException("DELIVERY UNIT " + courierName_new + " NOT FOUND for ORDERID " + SellyOrderID);
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+            log4j.error("updateSellyDeliveryService method - ERROR: " + e);
+            logException(logTest, "updateSellyDeliveryService method - ERROR: ", e);
+        }
     }
 
     public void IMSApproveOrder(ExtentTest logTest, JSONArray IMSArrayList) throws IOException {
