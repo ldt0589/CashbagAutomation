@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class IMS_01_Deliveried_Orders extends TestBase {
+public class IMS_02_Cancelled_Orders_Then_Change_Delivery_Service extends TestBase {
 
     private String sellerToken = null;
     private String adminToken = null;
@@ -63,17 +63,46 @@ public class IMS_01_Deliveried_Orders extends TestBase {
             OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "picking");
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "pending", "pending");
 
-            logStep = logStepInfo(logMethod, "Step #10: IMS PICKED orders");
+            logStep = logStepInfo(logMethod, "Step #10: IMS CANCELLED orders");
+            OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "cancelled");
+            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "cancelled");
+            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "waiting_cancelled", "pending");
+
+            logStep = logStepInfo(logMethod, "Step #11: SELLY Admin updates another delivery service for Order");
+//            OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "delivering");
+//            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "delivering");
+//            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "delivering", "delivering");
+
+            logStep = logStepInfo(logMethod, "Step #12: Selly Admin APPROVE orders again");
+            OrderAPI.SellyApproveOrder(logStep, SellyOrderIDList);
+            IMSArrayList = OrderAPI.getIMSOrderIdArray(logStep, SellyOrderIDList);
+            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList,"pending","pending");
+            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "waiting_approved");
+
+            logStep = logStepInfo(logMethod, "Step #13: IMS APPROVE orders");
+            OrderAPI.IMSApproveOrder(logStep, IMSArrayList);
+            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "confirmed");
+            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "pending", "pending");
+
+            logStep = logStepInfo(logMethod, "Step #14: Get IMS IDs Array");
+            IMSArrayList = OrderAPI.getIMSOrderIdArray(logStep, SellyOrderIDList);
+
+            logStep = logStepInfo(logMethod, "Step #15: IMS PICKING orders");
+            OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "picking");
+            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "picking");
+            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "pending", "pending");
+
+            logStep = logStepInfo(logMethod, "Step #16: IMS PICKED orders");
             OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "picked");
             OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "picked");
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "pending", "pending");
 
-            logStep = logStepInfo(logMethod, "Step #11: IMS DELIVERING orders");
+            logStep = logStepInfo(logMethod, "Step #17: IMS DELIVERING orders");
             OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "delivering");
             OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "delivering");
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "delivering", "delivering");
 
-            logStep = logStepInfo(logMethod, "Step #12: IMS DELIVERED orders");
+            logStep = logStepInfo(logMethod, "Step #18: IMS DELIVERED orders");
             OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "delivered");
             OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "completed");
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "delivered", "delivered");

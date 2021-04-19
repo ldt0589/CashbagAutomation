@@ -6,6 +6,7 @@ import io.restassured.specification.RequestSpecification;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.testng.SkipException;
 import resource.common.GlobalVariables;
 
 import java.io.IOException;
@@ -226,14 +227,13 @@ public class OrderAPI extends CartAPI{
 
         try {
 
-//            JSONArray IMSArrayList = getIMSOrderIdArray(logTest, IMSIDList);
-
             for (int i = 0; i < IMSArrayList.size(); i++) {
 
                 String ISMOrderID = (String) ((JSONObject) IMSArrayList.get(i)).get("IMSOrderID");
 
                 RequestSpecification IMSApproveOrder = this.IMSApproveOrder();
                 Response response = IMSApproveOrder.patch("admin/order/" + ISMOrderID + "/approved");
+                sleep(2);
                 logInfo(logTest, "-----> IMSApproveOrder Request URL: https://" + GlobalVariables.ImsEnvironment + "admin/order/" + ISMOrderID + "/approved");
                 logInfo(logTest, "-----> IMSApproveOrder Response: " + response.getBody().asString());
 
@@ -305,6 +305,7 @@ public class OrderAPI extends CartAPI{
                     put("remarks", "Notes");
                 }}).log().all();
                 Response response = confirmOrder.patch("/order/" + orderID + "/approve");
+                sleep(2);
                 logInfo(logTest, "-----> adminApproveOrder URI: https://" + GlobalVariables.SellyAdminEnvironment + "/order/" + orderID + "/approve");
                 logInfo(logTest, "-----> adminApproveOrder Response Body: " + response.getBody().asString());
             }
@@ -327,7 +328,9 @@ public class OrderAPI extends CartAPI{
                     String orderStatus_actual = (String) ((JSONObject) ((JSONObject) jsonBody.get("data")).get("data")).get("status");
                     String deliveryStatus_actual = (String) ((JSONObject)((JSONObject) ((JSONObject) jsonBody.get("data")).get("data")).get("delivery")).get("status");
 
+                    logInfo(logTest, "-----> verify SELLY Order Status: ");
                     verifyExpectedAndActualResults(logTest, orderStatus_expected, orderStatus_actual);
+                    logInfo(logTest, "-----> verify SELLY Delivery Order Status: ");
                     verifyExpectedAndActualResults(logTest, deliveryStatus_expected, deliveryStatus_actual);
                 }else {
                     logInfo(logTest, "-----> ORDER NOT FOUND" + response.getBody().asString());
@@ -353,6 +356,7 @@ public class OrderAPI extends CartAPI{
 
                     jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
                     String IMSOrderStatus_actual = (String) ((JSONObject) jsonBody.get("data")).get("status");
+                    logInfo(logTest, "-----> verify IMS Order Status: ");
                     verifyExpectedAndActualResults(logTest, IMSOrderStatus_expected, IMSOrderStatus_actual);
                 }else{
                     logInfo(logTest, "-----> ORDER NOT FOUND" + response.getBody().asString());
@@ -364,7 +368,7 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public ArrayList<String> createMultiOrder(ExtentTest logTest, String sellerToken, JSONObject customer) throws IOException {
+    public ArrayList<String> createMultiOrder(ExtentTest logTest, String sellerToken, JSONObject customer, String courierName) throws IOException {
         try {
 
             createMultiSessionOrder(logTest, sellerToken);
@@ -385,8 +389,16 @@ public class OrderAPI extends CartAPI{
                 sessionOrderIDList.add((String) itemsObject.get("sessionOrderID"));
 
                 JSONArray sessionDeliveries = (JSONArray) itemsObject.get("deliveries");
-                JSONObject deliveryObject = (JSONObject) sessionDeliveries.get(0);
-                deliverySessionIDList.add((String) deliveryObject.get("session"));
+
+                for(int x=0; x < sessionDeliveries.size(); x++){
+                    String courier_actual = (String)((JSONObject)((JSONObject) sessionDeliveries.get(x)).get("information")).get("courier_name");
+                    if (courier_actual.equals(courierName)) {
+                        String deliverySession = (String) ((JSONObject) sessionDeliveries.get(x)).get("session");
+                        deliverySessionIDList.add(deliverySession);
+                        break;
+                    }else if (x == (sessionDeliveries.size()-1))
+                        throw new SkipException("DELIVERY UNIT " + courierName + " NOT FOUND");
+                }
 
                 JSONObject sessionItem = new JSONObject();
                 sessionItem.put("delivery", deliverySessionIDList.get(i));

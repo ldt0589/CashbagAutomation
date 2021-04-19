@@ -35,6 +35,8 @@
   "IMS_01_Deliveried_Orders": [
   {
     "No.": "Data1",
+    "Courier_name": "Viettel Post",
+//    Ex: Viettel Post, Giao Hàng Tiết Kiệm
 //    Kho HCM:
 //    "Product_1": "6065551c13fb9ca5cac83658",
 //    Kho KONTUM:
@@ -45,6 +47,21 @@
 //    "Product_6": "606bcfeb90826dfeecb5d307"
   }
 ],
+  "IMS_02_Cancelled_Orders_Then_Change_Delivery_Service": [
+    {
+      "No.": "Data1",
+      "Courier_name": "Viettel Post",
+      //    Ex: Viettel Post, Giao Hàng Tiết Kiệm
+      //    Kho HCM:
+      //    "Product_1": "6065551c13fb9ca5cac83658",
+      //    Kho KONTUM:
+      "Product_2": "606bd03590826dfeecb5d30d"
+      //    "Product_3": "606bd00790826dfeecb5d309",
+      //    "Product_4": "606bd01e90826dfeecb5d30b",
+      //    "Product_5": "6066959886d0351cba5ed759",
+      //    "Product_6": "606bcfeb90826dfeecb5d307"
+    }
+  ],
   "Clear_Items_in_Cart":[
     {
     }
