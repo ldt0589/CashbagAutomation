@@ -25,6 +25,7 @@ public class OrderAPI extends CartAPI{
     private JSONArray sessionArray = null;
     private JSONObject jsonSession = null;
     private JSONObject jsonBody = null;
+    private JSONObject jsonBody_retry = null;
     private JSONParser jsonParser = new JSONParser();
     private JSONObject responseObject = null;
     private JSONObject customerObject = null;
@@ -218,12 +219,21 @@ public class OrderAPI extends CartAPI{
                 String ImsID_expected = (String) ((JSONObject) OrderArray_response.get(i)).get("code");
 
                 if(ImsID_actual.equals(ImsID_expected)){
+                    int retry = 0;
                     String IMSOrderID = (String) ((JSONObject) OrderArray_response.get(i)).get("_id");
-                    JSONObject deliveryObject = (JSONObject) ((JSONObject) OrderArray_response.get(i)).get("delivery");
+                    String trackingCode = (String)((JSONObject) ((JSONObject) OrderArray_response.get(i)).get("delivery")).get("trackingCode");
 
+                    while(trackingCode==null & retry<5) {
+                        sleep(1);
+                        Response responseRetry = getIMSOrderList.get("/admin/order");
+                        jsonBody_retry = (JSONObject) jsonParser.parse(responseRetry.body().asString());
+                        JSONArray OrderArray_response_retry = (JSONArray) ((JSONObject) jsonBody_retry.get("data")).get("data");
+                        trackingCode = (String)((JSONObject) ((JSONObject) OrderArray_response_retry.get(i)).get("delivery")).get("trackingCode");
+                        retry++;
+                    }
                     JSONObject orderIDObject = new JSONObject();
                     orderIDObject.put("ImsID", ImsID_actual);
-                    orderIDObject.put("trackingCode", deliveryObject.get("trackingCode"));
+                    orderIDObject.put("trackingCode", trackingCode);
                     orderIDObject.put("IMSOrderID", IMSOrderID);
                     OrderIDsArray.add(orderIDObject);
 
@@ -269,7 +279,9 @@ public class OrderAPI extends CartAPI{
                         Response updateDelivery_Response = SellyUpdateDeliveryService.put("order/" + SellyOrderID + "/deliveries");
                         sleep(1);
                         logInfo(logTest, "-----> Update Selly Delivery Service Request URL: https://" + GlobalVariables.SellyAdminEnvironment + "order/" + SellyOrderID + "/deliveries");
+                        logInfo(logTest, "-----> Update Selly Delivery Service Request BODY: {sessionDelivery: " + session_delivery + " }");
                         logInfo(logTest, "-----> Update Selly Delivery Service Response: " + updateDelivery_Response.getBody().asString());
+                        break;
                     }else if(x == (SellyDeliveryServiceList.size()-1)){
                         throw new SkipException("DELIVERY UNIT " + courierName_new + " NOT FOUND for ORDERID " + SellyOrderID);
                     }
@@ -293,7 +305,7 @@ public class OrderAPI extends CartAPI{
 
                 RequestSpecification IMSApproveOrder = this.IMSApproveOrder();
                 Response response = IMSApproveOrder.patch("admin/order/" + ISMOrderID + "/approved");
-                sleep(2);
+                sleep(3);
                 logInfo(logTest, "-----> IMSApproveOrder Request URL: https://" + GlobalVariables.ImsEnvironment + "admin/order/" + ISMOrderID + "/approved");
                 logInfo(logTest, "-----> IMSApproveOrder Response: " + response.getBody().asString());
 
@@ -355,7 +367,7 @@ public class OrderAPI extends CartAPI{
         }
     }
 
-    public void SellyApproveOrder(ExtentTest logTest, ArrayList orderIDList) throws IOException {
+    public void SellyConfirmOrder(ExtentTest logTest, ArrayList orderIDList, String ConfirmAction) throws IOException {
         try {
 
             for(int i=0; i < orderIDList.size(); i++){
@@ -364,14 +376,26 @@ public class OrderAPI extends CartAPI{
                 confirmOrder.body(new HashMap<String, Object>() {{
                     put("remarks", "Notes");
                 }}).log().all();
-                Response response = confirmOrder.patch("/order/" + orderID + "/approve");
+                String confirmAction_actual = null;
+                switch (ConfirmAction) {
+                    case "cancel":
+                        confirmAction_actual = "cancel";
+                        break;
+                    case "approve":
+                        confirmAction_actual = "approve";
+                        break;
+                    default:
+                        // nothing
+                }
+                String confirmAction_final = confirmAction_actual;
+                Response response = confirmOrder.patch("/order/" + orderID + "/" + confirmAction_final);
                 sleep(2);
-                logInfo(logTest, "-----> adminApproveOrder URI: https://" + GlobalVariables.SellyAdminEnvironment + "/order/" + orderID + "/approve");
-                logInfo(logTest, "-----> adminApproveOrder Response Body: " + response.getBody().asString());
+                logInfo(logTest, "-----> SellyConfirmOrder URI: https://" + GlobalVariables.SellyAdminEnvironment + "/order/" + orderID + "/" + confirmAction_final);
+                logInfo(logTest, "-----> SellyConfirmOrder Response Body: " + response.getBody().asString());
             }
         } catch (Exception e) {
-            log4j.error("adminApproveOrder method - ERROR: " + e);
-            logException(logTest, "adminApproveOrder method - ERROR: ", e);
+            log4j.error("SellyConfirmOrder method - ERROR: " + e);
+            logException(logTest, "SellyConfirmOrder method - ERROR: ", e);
         }
     }
 

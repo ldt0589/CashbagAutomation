@@ -45,7 +45,7 @@ public class IMS_01_Deliveried_Orders extends TestBase {
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList,"waiting_approved","waiting_approved");
 
             logStep = logStepInfo(logMethod, "Step #6: Selly Admin APPROVE orders");
-            OrderAPI.SellyApproveOrder(logStep, SellyOrderIDList);
+            OrderAPI.SellyConfirmOrder(logStep, SellyOrderIDList, "approve");
             IMSArrayList = OrderAPI.getIMSOrderIdArray(logStep, SellyOrderIDList);
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList,"pending","pending");
             OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "waiting_approved");
