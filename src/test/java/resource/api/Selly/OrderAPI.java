@@ -90,6 +90,15 @@ public class OrderAPI extends CartAPI{
                 relaxedHTTPSValidation();
     }
 
+    private RequestSpecification getSellyOrderHistory() {
+        return given().
+                baseUri("https://" + GlobalVariables.SellyAdminEnvironment).
+                header("Authorization", "Bearer " + GlobalVariables.SellyAdminToken).
+                header("Content-Type","application/json").
+                contentType("application/json").
+                relaxedHTTPSValidation();
+    }
+
     private RequestSpecification getAppOrderDetail(String sellerToken) {
         return given().
                 baseUri("https://" + GlobalVariables.SellyEnvironment).
@@ -207,57 +216,36 @@ public class OrderAPI extends CartAPI{
 
                 ArrayList SellyTrackingCodeList = getTrackingCodeList(logTest, SellyOrderIDList);
 
+
                 RequestSpecification getIMSOrderDetail = this.getIMSOrderDetail();
 
                 for(int i=0; i<SellyOrderIDList.size(); i++){
 
-
+                    String SellyTrackingCode = (String) SellyTrackingCodeList.get(i);
+                    logInfo(logTest, "-----> SellyTrackingCode: " + SellyTrackingCode);
 
                     String IMSOrderID_old = (String)((JSONObject) IMSIDList_old.get(i)).get("IMSOrderID");
                     Response IMSOrder_response_old = getIMSOrderDetail.get("/admin/order/" + IMSOrderID_old);
                     jsonBody = (JSONObject) jsonParser.parse(IMSOrder_response_old.body().asString());
                     String IMSTrackingCode_old = (String) ((JSONObject) jsonBody.get("data")).get("trackingCode");
-
+                    logInfo(logTest, "-----> IMSTrackingCode_old: " + IMSTrackingCode_old);
 
                     String IMSOrderID_new = (String)((JSONObject) IMSIDList_new.get(i)).get("IMSOrderID");
                     Response IMSOrder_response_new = getIMSOrderDetail.get("/admin/order/" + IMSOrderID_new);
                     jsonBody = (JSONObject) jsonParser.parse(IMSOrder_response_new.body().asString());
                     String IMSTrackingCode_new = (String) ((JSONObject) jsonBody.get("data")).get("trackingCode");
+                    logInfo(logTest, "-----> IMSTrackingCode_new: " + IMSTrackingCode_new);
 
+                    logInfo(logTest, "-----> Verify SellyTrackingCode equals IMSTrackingCode_old : " + IMSTrackingCode_old);
+                    verifyExpectedAndActualResults(logTest, SellyTrackingCode, IMSTrackingCode_old);
 
+                    logInfo(logTest, "-----> Verify SellyTrackingCode equals IMSTrackingCode_new : " + IMSTrackingCode_old);
+                    verifyExpectedAndActualResults(logTest, SellyTrackingCode, IMSTrackingCode_new);
 
                 }
             }else
-                logInfo(logTest, "-----> IMSIDList_old && IMSIDList_new are not mapped");
+                logInfo(logTest, "-----> SellyOrderIDList && IMSIDList_old && IMSIDList_new are not mapped");
 
-//            ArrayList TrackingCodeList_actual = getTrackingCodeList(logTest, SellyOrderIDList);
-//
-//            int numberOfIMSOrder_actual = TrackingCodeList_actual.size();
-//
-//            RequestSpecification getIMSOrderDetail = this.getIMSOrderDetail();
-//            Response response = getIMSOrderDetail.get("/admin/order/" + );
-//            jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
-//            JSONArray IMSOrder_response = (JSONArray) ((JSONObject) jsonBody.get("data")).get("data");
-//
-//            for(int i=0; i < IMSOrder_response.size(); i++){
-//                String trackingCode = (String) ((JSONObject) IMSOrder_response.get(i)).get("trackingCode");
-//                if(){
-//
-//                }
-//
-//                if(response.getStatusCode() == 200) {
-//                    jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
-//                    String orderStatus_actual = (String) ((JSONObject) ((JSONObject) jsonBody.get("data")).get("data")).get("status");
-//                    String deliveryStatus_actual = (String) ((JSONObject)((JSONObject) ((JSONObject) jsonBody.get("data")).get("data")).get("delivery")).get("status");
-//
-//                    logInfo(logTest, "-----> verify SELLY Order Status: ");
-//                    verifyExpectedAndActualResults(logTest, orderStatus_expected, orderStatus_actual);
-//                    logInfo(logTest, "-----> verify SELLY Delivery Order Status: ");
-//                    verifyExpectedAndActualResults(logTest, deliveryStatus_expected, deliveryStatus_actual);
-//                }else {
-//                    logInfo(logTest, "-----> ORDER NOT FOUND" + response.getBody().asString());
-//                }
-//            }
         } catch (Exception e) {
             log4j.error("verifySellyOrderStatus method - ERROR: " + e);
             logException(logTest, "verifySellyOrderStatus method - ERROR: ", e);
@@ -487,6 +475,39 @@ public class OrderAPI extends CartAPI{
         } catch (Exception e) {
             log4j.error("SellyConfirmOrder method - ERROR: " + e);
             logException(logTest, "SellyConfirmOrder method - ERROR: ", e);
+        }
+    }
+
+    public void verifySellyOrderHistory(ExtentTest logTest, ArrayList SellyOrderIDList, String DeliveryService_old, String DeliveryStatus_old, String DeliveryService_new, String DeliveryStatus_new) throws IOException {
+        try {
+
+            RequestSpecification getSellyOrderHistory = this.getSellyOrderHistory();
+
+            for(int i=0; i < SellyOrderIDList.size(); i++){
+                Response OrderHistoryResponse = getSellyOrderHistory.get("/order/" + SellyOrderIDList.get(i) + "/deliveries/history");
+                jsonBody = (JSONObject) jsonParser.parse(OrderHistoryResponse.body().asString());
+
+                String DeliveryStatusNew_actual = (String)((JSONObject)((JSONArray) ((JSONObject) jsonBody.get("data")).get("histories")).get(0)).get("status");
+                logInfo(logTest, "-----> verify SELLY Delivery Status NEW: ");
+                verifyExpectedAndActualResults(logTest, DeliveryStatusNew_actual, DeliveryStatus_new);
+
+                String DeliveryServiceNew_actual = (String)((JSONObject)((JSONObject)((JSONArray) ((JSONObject) jsonBody.get("data")).get("histories")).get(0)).get("delivery")).get("courierName");
+                logInfo(logTest, "-----> verify SELLY Delivery Service Name NEW: ");
+                verifyExpectedAndActualResults(logTest, DeliveryServiceNew_actual, DeliveryService_new);
+
+
+                String DeliveryStatusOld_actual = (String)((JSONObject)((JSONArray) ((JSONObject) jsonBody.get("data")).get("histories")).get(1)).get("status");
+                logInfo(logTest, "-----> verify SELLY Delivery Status OLD: ");
+                verifyExpectedAndActualResults(logTest, DeliveryStatusOld_actual, DeliveryStatus_old);
+
+                String DeliveryServiceOld_actual = (String)((JSONObject)((JSONObject)((JSONArray) ((JSONObject) jsonBody.get("data")).get("histories")).get(1)).get("delivery")).get("courierName");
+                logInfo(logTest, "-----> verify SELLY Delivery Service Name NEW: ");
+                verifyExpectedAndActualResults(logTest, DeliveryServiceOld_actual, DeliveryService_old);
+            }
+
+        } catch (Exception e) {
+            log4j.error("verifySellyOrderHistory method - ERROR: " + e);
+            logException(logTest, "verifySellyOrderHistory method - ERROR: ", e);
         }
     }
 
