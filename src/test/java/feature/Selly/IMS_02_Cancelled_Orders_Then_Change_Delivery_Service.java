@@ -78,6 +78,7 @@ public class IMS_02_Cancelled_Orders_Then_Change_Delivery_Service extends TestBa
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList,"pending","pending");
             OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "waiting_approved");
 
+
             logStep = logStepInfo(logMethod, "Step #13: IMS APPROVE orders");
             OrderAPI.IMSApproveOrder(logStep, IMSArrayList);
             OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "confirmed");

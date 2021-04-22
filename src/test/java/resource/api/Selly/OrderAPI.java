@@ -35,6 +35,7 @@ public class OrderAPI extends CartAPI{
     private String locationID = null;
     public static ArrayList<String> sessionIDList = new ArrayList<String>();
     public static ArrayList<String> IMSIdList = null;
+    public static ArrayList<String> TrackingCodeList = null;
     public static ArrayList<String> orderIDList = new ArrayList<String>();
     public static ArrayList<String> sessionOrderIDList = new ArrayList<String>();
     public static ArrayList<String> deliverySessionIDList = new ArrayList<String>();
@@ -171,6 +172,96 @@ public class OrderAPI extends CartAPI{
             log4j.error("readPayloadDataFromJsonFile method - ERROR - " + e);
         }
         return data;
+    }
+
+    public ArrayList<String> getTrackingCodeList(ExtentTest logTest, ArrayList SellyOrderIDList) throws IOException {
+
+        try {
+            TrackingCodeList = new ArrayList<>();
+
+            for (int i = 0; i < SellyOrderIDList.size(); i++) {
+
+                String OrderID = (String) SellyOrderIDList.get(i);
+                RequestSpecification getOrderDetail = this.getOrderDetail();
+                Response response = getOrderDetail.get("/order/" + OrderID + "/items");
+
+                String TrackingCode = (String) ((JSONObject) ((JSONObject) ((JSONObject) jsonParser.parse(response.body().asString())).get("data")).get("data")).get("trackingCode");
+
+                TrackingCodeList.add(TrackingCode);
+
+                logInfo(logTest, "-----> Tracking Code List: " + TrackingCodeList.toString());
+            }
+
+            return TrackingCodeList;
+
+        } catch (Exception e) {
+            log4j.error("getTrackingCodeList method - ERROR: " + e);
+            logException(logTest, "getTrackingCodeList method - ERROR: ", e);
+        }
+        return TrackingCodeList;
+    }
+
+    public void verifyNewIMSOrderCreated(ExtentTest logTest, ArrayList SellyOrderIDList, JSONArray IMSIDList_old, JSONArray IMSIDList_new) throws IOException {
+        try {
+            if((IMSIDList_old.size() == SellyOrderIDList.size()) & (IMSIDList_new.size() == SellyOrderIDList.size())){
+
+                ArrayList SellyTrackingCodeList = getTrackingCodeList(logTest, SellyOrderIDList);
+
+                RequestSpecification getIMSOrderDetail = this.getIMSOrderDetail();
+
+                for(int i=0; i<SellyOrderIDList.size(); i++){
+
+
+
+                    String IMSOrderID_old = (String)((JSONObject) IMSIDList_old.get(i)).get("IMSOrderID");
+                    Response IMSOrder_response_old = getIMSOrderDetail.get("/admin/order/" + IMSOrderID_old);
+                    jsonBody = (JSONObject) jsonParser.parse(IMSOrder_response_old.body().asString());
+                    String IMSTrackingCode_old = (String) ((JSONObject) jsonBody.get("data")).get("trackingCode");
+
+
+                    String IMSOrderID_new = (String)((JSONObject) IMSIDList_new.get(i)).get("IMSOrderID");
+                    Response IMSOrder_response_new = getIMSOrderDetail.get("/admin/order/" + IMSOrderID_new);
+                    jsonBody = (JSONObject) jsonParser.parse(IMSOrder_response_new.body().asString());
+                    String IMSTrackingCode_new = (String) ((JSONObject) jsonBody.get("data")).get("trackingCode");
+
+
+
+                }
+            }else
+                logInfo(logTest, "-----> IMSIDList_old && IMSIDList_new are not mapped");
+
+//            ArrayList TrackingCodeList_actual = getTrackingCodeList(logTest, SellyOrderIDList);
+//
+//            int numberOfIMSOrder_actual = TrackingCodeList_actual.size();
+//
+//            RequestSpecification getIMSOrderDetail = this.getIMSOrderDetail();
+//            Response response = getIMSOrderDetail.get("/admin/order/" + );
+//            jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
+//            JSONArray IMSOrder_response = (JSONArray) ((JSONObject) jsonBody.get("data")).get("data");
+//
+//            for(int i=0; i < IMSOrder_response.size(); i++){
+//                String trackingCode = (String) ((JSONObject) IMSOrder_response.get(i)).get("trackingCode");
+//                if(){
+//
+//                }
+//
+//                if(response.getStatusCode() == 200) {
+//                    jsonBody = (JSONObject) jsonParser.parse(response.body().asString());
+//                    String orderStatus_actual = (String) ((JSONObject) ((JSONObject) jsonBody.get("data")).get("data")).get("status");
+//                    String deliveryStatus_actual = (String) ((JSONObject)((JSONObject) ((JSONObject) jsonBody.get("data")).get("data")).get("delivery")).get("status");
+//
+//                    logInfo(logTest, "-----> verify SELLY Order Status: ");
+//                    verifyExpectedAndActualResults(logTest, orderStatus_expected, orderStatus_actual);
+//                    logInfo(logTest, "-----> verify SELLY Delivery Order Status: ");
+//                    verifyExpectedAndActualResults(logTest, deliveryStatus_expected, deliveryStatus_actual);
+//                }else {
+//                    logInfo(logTest, "-----> ORDER NOT FOUND" + response.getBody().asString());
+//                }
+//            }
+        } catch (Exception e) {
+            log4j.error("verifySellyOrderStatus method - ERROR: " + e);
+            logException(logTest, "verifySellyOrderStatus method - ERROR: ", e);
+        }
     }
 
     public ArrayList<String> getIMSIdList(ExtentTest logTest, ArrayList SellyOrderIDList) throws IOException {
