@@ -82,7 +82,7 @@ public class IMS_02_Cancelled_Orders_Then_Change_Delivery_Service extends TestBa
             logStep = logStepInfo(logMethod, "Step #13: SELLY Admin updates another delivery service for Order");
             OrderAPI.SellyUpdateDeliveryService(logStep, SellyOrderIDList, data.get("Courier_name_new"));
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "waiting_approved", "delivering");
-            OrderAPI.verifySellyOrderHistory(logStep, SellyOrderIDList, data.get("Courier_name"), "cancelled", data.get("Courier_name_new"), "delivering");
+            OrderAPI.verifySellyOrderHistory(logStep, SellyOrderIDList, data.get("Courier_name"), "cancelled", data.get("Courier_name_new"), "waiting_approved");
 
             logStep = logStepInfo(logMethod, "Step #14: Selly Admin APPROVE orders again");
             OrderAPI.SellyConfirmOrder(logStep, SellyOrderIDList, "approve");

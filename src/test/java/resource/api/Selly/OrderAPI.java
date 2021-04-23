@@ -488,21 +488,20 @@ public class OrderAPI extends CartAPI{
                 jsonBody = (JSONObject) jsonParser.parse(OrderHistoryResponse.body().asString());
 
                 String DeliveryStatusNew_actual = (String)((JSONObject)((JSONArray) ((JSONObject) jsonBody.get("data")).get("histories")).get(0)).get("status");
-                logInfo(logTest, "-----> verify SELLY Delivery Status NEW: ");
-                verifyExpectedAndActualResults(logTest, DeliveryStatusNew_actual, DeliveryStatus_new);
+                logInfo(logTest, "-----> verify SELLY ORDER HISTORY - Delivery Status NEW: ");
+                verifyExpectedAndActualResults(logTest, DeliveryStatus_new, DeliveryStatusNew_actual);
 
                 String DeliveryServiceNew_actual = (String)((JSONObject)((JSONObject)((JSONArray) ((JSONObject) jsonBody.get("data")).get("histories")).get(0)).get("delivery")).get("courierName");
-                logInfo(logTest, "-----> verify SELLY Delivery Service Name NEW: ");
-                verifyExpectedAndActualResults(logTest, DeliveryServiceNew_actual, DeliveryService_new);
-
+                logInfo(logTest, "-----> verify SELLY ORDER HISTORY - Service Name NEW: ");
+                verifyExpectedAndActualResults(logTest, DeliveryService_new, DeliveryServiceNew_actual);
 
                 String DeliveryStatusOld_actual = (String)((JSONObject)((JSONArray) ((JSONObject) jsonBody.get("data")).get("histories")).get(1)).get("status");
-                logInfo(logTest, "-----> verify SELLY Delivery Status OLD: ");
-                verifyExpectedAndActualResults(logTest, DeliveryStatusOld_actual, DeliveryStatus_old);
+                logInfo(logTest, "-----> verify SELLY ORDER HISTORY - Status OLD: ");
+                verifyExpectedAndActualResults(logTest, DeliveryStatus_old, DeliveryStatusOld_actual);
 
                 String DeliveryServiceOld_actual = (String)((JSONObject)((JSONObject)((JSONArray) ((JSONObject) jsonBody.get("data")).get("histories")).get(1)).get("delivery")).get("courierName");
-                logInfo(logTest, "-----> verify SELLY Delivery Service Name NEW: ");
-                verifyExpectedAndActualResults(logTest, DeliveryServiceOld_actual, DeliveryService_old);
+                logInfo(logTest, "-----> verify SELLY ORDER HISTORY - Service Name OLD: ");
+                verifyExpectedAndActualResults(logTest, DeliveryService_old, DeliveryServiceOld_actual);
             }
 
         } catch (Exception e) {
