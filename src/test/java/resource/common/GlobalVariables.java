@@ -33,7 +33,11 @@ public class GlobalVariables {
     public static String IMSToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDU4NDAzNzM1OGQzMjJlZDZiNzA3NjMiLCJhdmF0YXIiOiJodHRwczovL3NlbGx5LWltcy1kZXZlbG9wLnMzLWFwLXNvdXRoZWFzdC0xLmFtYXpvbmF3cy5jb20vMzg2ODc2Mjg3MzMxXzE2MTYzOTY3MzUxOTAuanBnIiwiZXhwIjoxNjMzODc3MzczLCJpc1Jvb3QiOnRydWUsIm5hbWUiOiJSb290IiwicGFydG5lciI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsInBlcm1pc3Npb25zIjpbXSwicGhvbmUiOiIrODQ3NjM3NzA4NjkiLCJ0eXBlIjoiaW1zIiwidXNlciI6IjYwNTg0MDM3MzU4ZDMyMmVkNmI3MDc2MSJ9.ubRpoJdcXGJSyaOd1oyx-cbTBUrPs14Mf7-_zCed7ns";
     public static String SellerId = "6012952a45f56d576a800874";
     public static String SellerPhone = "0935321012";
-    public static String SellyAdminID = "6064284d8ef9b2685179a61a";
+    public static String SellyAdminID = "60915206ecdb41d888a7f384";
+
+    //PRICE
+    public static Integer SellerSharingCommission = 70;
+//    public static Integer SupplierCommissionPercent = 70;
 
 
     //handling window

@@ -131,6 +131,19 @@ public class Utility {
         }
     }
 
+    public static void verifyExpectedAndActualNumber(ExtentTest logTest, Float expected, Float actual) throws IOException {
+        try {
+            if (actual.equals(expected)) {
+                logPass(logTest, "Expected Result: " + expected + "<br/>Actual Result: " + actual);
+            } else {
+                logFail(logTest, "Expected Result: " + expected + "<br/>Actual Result: " + actual);
+            }
+        } catch (Exception e) {
+            log4j.error("verifyExpectedAndActualNumber method - ERROR - " + e);
+            logException(logTest, "verifyExpectedAndActualNumber method - ERROR", e);
+        }
+    }
+
     public static void verifyUserStatistic(ExtentTest logTest, String expected, String actual) throws IOException {
         try {
             if (actual.trim().equalsIgnoreCase(expected)) {
