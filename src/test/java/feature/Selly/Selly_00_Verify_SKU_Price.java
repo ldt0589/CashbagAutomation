@@ -1,17 +1,12 @@
 package feature.Selly;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.testng.annotations.Test;
-import resource.api.Selly.ProductAPI;
-import resource.api.Selly.OrderAPI;
 import resource.api.Selly.ProductAPI;
 import resource.api.Selly.UserAPI;
 import resource.common.GlobalVariables;
 import resource.common.TestBase;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Selly_00_Verify_SKU_Price extends TestBase {
@@ -32,7 +27,7 @@ public class Selly_00_Verify_SKU_Price extends TestBase {
             SellyAdminToken = userAPI.getAdminToken(logStep, GlobalVariables.SellyAdminID);
 
             logStep = logStepInfo(logMethod, "Step #3: Verify Product SKU Price");
-            ProductAPI.VerifySKUPrice(logStep, sellerToken, SellyAdminToken);
+            ProductAPI.VerifySKUPrice(logStep, sellerToken, SellyAdminToken, 100);
 
         } catch (Exception e) {
             log4j.error(getStackTrade(e.getStackTrace())) ;

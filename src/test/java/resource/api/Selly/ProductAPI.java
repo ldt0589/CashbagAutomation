@@ -1,7 +1,6 @@
 package resource.api.Selly;
 
 import com.aventstack.extentreports.ExtentTest;
-import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.json.simple.JSONArray;
@@ -10,7 +9,6 @@ import org.json.simple.parser.JSONParser;
 import resource.common.GlobalVariables;
 import resource.common.TestBase;
 
-import java.io.FileWriter;
 import java.io.IOException;
 
 import static io.restassured.RestAssured.given;
@@ -19,22 +17,7 @@ public class ProductAPI extends TestBase {
     private String issueIdPath = "/{issueId}";
 
     private JSONParser jsonParser = new JSONParser();
-    private RestAssuredConfig restConfig = new RestAssuredConfig();
-    private JSONObject jsonExpected = null;
-    private JSONObject jsonUser = null;
-    private JSONObject jsonProductDetail = null;
-    private JSONObject ProductDetailObject = null;
-    private JSONObject response = null;
     private JSONArray itemArray = null;
-    private String userStatistic = null;
-    private String userId = null;
-    private String skuID = null;
-    private String skuCode = null;
-    private String inventoryID = null;
-    private String inventoryName = null;
-    private int i = 0;
-    private int y = 0;
-    private static FileWriter file;
 
     private RequestSpecification ItemSpecification(String userToken) {
         return given().
@@ -52,12 +35,11 @@ public class ProductAPI extends TestBase {
 
     }
 
-    public JSONArray VerifySKUPrice(ExtentTest logTest, String sellerToken, String SellyAdminToken) throws IOException {
+    public JSONArray VerifySKUPrice(ExtentTest logTest, String sellerToken, String SellyAdminToken, int limitItem) throws IOException {
         try {
             RequestSpecification getProductList = this.getProductListSpec(SellyAdminToken);
+            getProductList.queryParam("limit", limitItem);
             Response ProductListResponse = getProductList.get("/products");
-
-            logInfo(logTest, "-----> get ProductID Array Response Body: " + ProductListResponse.getBody().asString());
 
             JSONObject ProductListObject = (JSONObject) jsonParser.parse(ProductListResponse.body().asString());
             JSONArray productListArray = (JSONArray)((JSONObject) ProductListObject.get("data")).get("products");
@@ -66,46 +48,56 @@ public class ProductAPI extends TestBase {
                 String ProductID = (String) ((JSONObject) productListArray.get(i)).get("_id");
                 JSONObject pricePercent = (JSONObject) ((JSONObject) productListArray.get(i)).get("pricePercent");
                 String SupplierCommission = String.valueOf(pricePercent.get("supplier"));
-                logInfo(logTest, "-----> Product ID: " + ProductID);
+                logInfo(logTest, "-----> PRODUCT " + i + "\nProduct ID: " + ProductID);
                 logInfo(logTest, "-----> Supplier Commission Percent: " + SupplierCommission);
 
                 RequestSpecification getProductDetail = this.ItemSpecification(sellerToken);
-                Response ProductDetailResponse = getProductDetail.get("/products" + ProductID);
+                Response ProductDetailResponse = getProductDetail.get("/products/" + ProductID);
+
+                if(ProductDetailResponse.getStatusCode() == 200){
+                    JSONObject ProductDetailObject = (JSONObject) jsonParser.parse(ProductDetailResponse.body().asString());
+                    JSONArray ItemSKUArray = (JSONArray)((JSONObject)((JSONObject) ProductDetailObject.get("data")).get("product")).get("items");
 
 
-                JSONObject ProductDetailObject = (JSONObject) jsonParser.parse(ProductDetailResponse.body().asString());
-                JSONArray ItemSKUArray = (JSONArray)((JSONObject)((JSONObject) ProductDetailObject.get("data")).get("product")).get("items");
+                    for (int z = 0; z < ItemSKUArray.size(); z++) {
+                        String ItemID = (String) ((JSONObject) ItemSKUArray.get(z)).get("_id");
+                        String ItemSKU = (String) ((JSONObject) ItemSKUArray.get(z)).get("sku");
 
-                for(int z=0; z<ItemSKUArray.size(); z++){
-                    String ItemID = (String) ((JSONObject) ItemSKUArray.get(z)).get("_id");
-                    String ItemSKU = (String) ((JSONObject) ItemSKUArray.get(z)).get("sku");
-                    Float ItemMarketPrice = (Float)((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("market");
+                        String ItemMarketPrice = String.valueOf(((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("market"));
 
-                    Float ItemBasePrice = (Float)((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("base");
-                    Float ItemMinPrice = (Float)((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("minimum");
-                    Float ItemMaxPrice = (Float)((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("maximum");
-                    Float ItemProfitPrice = (Float)((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("profit");
-                    Float ItemSupplierPrice = (Float)((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("supplier");
+                        logInfo(logTest, "-----> SKU " + z + "\n SKU ID: " + ItemID);
+                        logInfo(logTest, "-----> SKU: " + ItemSKU);
+                        logInfo(logTest, "-----> Market Price: " + ItemMarketPrice);
 
-                    Float ItemProfitPrice_Expected = ItemMarketPrice*Long.parseLong(SupplierCommission)/100*GlobalVariables.SellerSharingCommission/100;
-                    Float ItemBasePrice_Expected = ItemMarketPrice-ItemProfitPrice_Expected;
-                    Float ItemSupplierPrice_Expected = ItemMarketPrice-(100-Long.parseLong(SupplierCommission))/100;
+                        String ItemBasePrice = String.valueOf(((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("base"));
+                        String ItemMinPrice = String.valueOf(((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("minimum"));
+                        String ItemMaxPrice = String.valueOf(((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("maximum"));
+                        String ItemProfitPrice = String.valueOf(((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("profit"));
+                        String ItemSupplierPrice = String.valueOf(((JSONObject) ((JSONObject) ItemSKUArray.get(z)).get("price")).get("supplier"));
 
-                    logInfo(logTest, "-----> Verify Item Base Price: ");
-                    verifyExpectedAndActualNumber(logTest, ItemBasePrice, ItemBasePrice_Expected);
+                        Float ItemProfitPrice_Expected = Float.parseFloat(ItemMarketPrice) * Float.parseFloat(SupplierCommission) / 100 * GlobalVariables.SellerSharingCommission / 100;
+                        Float ItemBasePrice_Expected = Float.parseFloat(ItemMarketPrice) - ItemProfitPrice_Expected;
+                        Float ItemSupplierPrice_Expected = Float.parseFloat(ItemMarketPrice) * ((100 - Float.parseFloat(SupplierCommission)) / 100);
 
-                    logInfo(logTest, "-----> Verify Item Min Price: ");
-                    verifyExpectedAndActualNumber(logTest, ItemMinPrice, ItemBasePrice_Expected);
+                        logInfo(logTest, "-----> Verify Item Base Price: ");
+                        verifyExpectedAndActualNumber(logTest, Float.parseFloat(ItemBasePrice), ItemBasePrice_Expected);
 
-                    logInfo(logTest, "-----> Verify Item Max Price: ");
-                    verifyExpectedAndActualNumber(logTest, ItemMaxPrice, ItemMarketPrice);
+                        logInfo(logTest, "-----> Verify Item Min Price: ");
+                        verifyExpectedAndActualNumber(logTest, Float.parseFloat(ItemMinPrice), ItemBasePrice_Expected);
 
-                    logInfo(logTest, "-----> Verify Item Profit Price: ");
-                    verifyExpectedAndActualNumber(logTest, ItemProfitPrice, ItemProfitPrice_Expected);
+                        logInfo(logTest, "-----> Verify Item Max Price: ");
+                        verifyExpectedAndActualNumber(logTest, Float.parseFloat(ItemMaxPrice), Float.parseFloat(ItemMarketPrice));
 
-                    logInfo(logTest, "-----> Verify Item Supplier Price: ");
-                    verifyExpectedAndActualNumber(logTest, ItemSupplierPrice, ItemSupplierPrice_Expected);
-                }
+                        logInfo(logTest, "-----> Verify Item Profit Price: ");
+                        verifyExpectedAndActualNumber(logTest, Float.parseFloat(ItemProfitPrice), ItemProfitPrice_Expected);
+
+                        logInfo(logTest, "-----> Verify Item Supplier Price: ");
+                        verifyExpectedAndActualNumber(logTest, Float.parseFloat(ItemSupplierPrice), ItemSupplierPrice_Expected);
+                    }
+
+                }else
+                    logInfo(logTest, "-----> PRODUCT NOT FOUND ");
+
             }
             return itemArray;
 
