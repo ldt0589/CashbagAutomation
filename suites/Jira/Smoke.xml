@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Regression" parallel="classes">
+    <listeners>
+        <listener class-name="resource.common.SuiteAlterer"/>
+    </listeners>
+    <test name="Regression testing">
+        <parameter name="browser" value="chrome"/>
+        <groups>
+            <run>
+                <include name="Smoke" />
+            </run>
+        </groups>
+        <packages>
+            <package name="feature.Jira.Issue"></package>
+            <package name="feature.Jira.Issue02"></package>
+        </packages>
+    </test>
+</suite>

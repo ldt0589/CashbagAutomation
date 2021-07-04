@@ -31,7 +31,7 @@ public class TestBase extends Utility {
     public String testNameWithStatus;
     public static ArrayList<String> testcaseList = new ArrayList<String>();
 
-    @BeforeSuite()
+    @BeforeSuite(alwaysRun=true)
     public synchronized void beforeSuite() throws IOException {
 
         // Initiate log4j property system
@@ -160,7 +160,7 @@ public class TestBase extends Utility {
         log4j.info("beforeSuite method - End");
     }
 
-    @BeforeClass
+    @BeforeClass(alwaysRun=true)
     public synchronized void beforeClass() throws IOException {
         log4j.info("beforeClass method - start");
 
@@ -175,7 +175,7 @@ public class TestBase extends Utility {
         log4j.info("beforeClass method - End");
     }
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun=true)
     public synchronized void beforeMethod(Object[] data) throws IOException {
         log4j.info("beforeMethod method - Start");
         logStep = null;
@@ -209,7 +209,7 @@ public class TestBase extends Utility {
             logMethod.assignCategory(dataTest.get("TestingType"));
 
             // Start web driver
-//            initializeDriver(logMethod);
+            initializeDriver(logMethod);
 
             log4j.info("beforeMethod method - End");
         }
@@ -219,7 +219,7 @@ public class TestBase extends Utility {
         }
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun=true)
     public synchronized void afterMethod() throws IOException {
         log4j.info("afterMethod method - Start");
 
@@ -233,7 +233,7 @@ public class TestBase extends Utility {
         log4j.info("afterMethod method - End");
     }
 
-    @AfterClass()
+    @AfterClass(alwaysRun=true)
     public synchronized void afterClass() throws IOException {
         log4j.info("afterClass method - Start");
 
@@ -261,7 +261,7 @@ public class TestBase extends Utility {
         log4j.info("afterClass method - End");
     }
 
-    @AfterSuite()
+    @AfterSuite(alwaysRun=true)
     public synchronized void afterSuite() throws Exception {
         log4j.info("afterSuite method - Start");
 

@@ -101,7 +101,7 @@ public class GlobalVariables {
 
     //Driver variables
     public static final String CHROME_DRIVER_MAC = PROJECT_PATH + "/src/main/resources/drivers/chromedriver";
-    public static final String CHROME_DRIVER_WIN = PROJECT_PATH + "/src/main/resources/drivers/chromedriver_v89.exe";
+    public static final String CHROME_DRIVER_WIN = PROJECT_PATH + "/src/main/resources/drivers/chromedriver_v91.exe";
     public static final String GECKO_DRIVER_MAC = PROJECT_PATH + "/src/main/resources/drivers/geckodriver-v0.23";
     public static final String GECKO_DRIVER_WIN = PROJECT_PATH + "/src/main/resources/drivers/geckodriver-v0.23.exe";
 

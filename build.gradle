@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.testng', name: 'testng', version: '6.14.3'
+    testImplementation group: 'org.testng', name: 'testng', version: '7.0.0'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
     compile group: 'postgresql', name: 'postgresql', version: '9.1-901.jdbc4'
     compile group: 'com.aventstack', name: 'extentreports', version: '3.0.5'
@@ -49,8 +49,13 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.7.2'
 }
 
-//task hello {
-//    println('hello ThangLe')
+//task smokeTests(type: Test)  //we define a task with name ‘smokeTests’
+//{
+//    useTestNG() {
+//        useDefaultListeners = true
+//        suites '/suites/Jira/Regression.xml'
+//        includeGroups 'Smoke' // We define the group name by using ‘includeGroups’ parameter.
+//    }
 //}
 
 test {
@@ -60,12 +65,21 @@ test {
     def testingtype = props.getProperty("TestingType")
 
     useTestNG() {
-//        suites '/suites/RegressionSuite.xml'
-        if (testingtype == 'Regression') {
-            suites '/suites/RegressionSuite2.xml'
+
+        switch (testingtype) {
+            case 'Regression':
+                suites '/suites/Jira/Regression.xml'
+                break;
+            case 'Smoke':
+                suites '/suites/Jira/Regression.xml'
+                includeGroups 'Smoke'
+                break;
+            default:
+                // Do something
+                break;
         }
+
     }
 
     testLogging.showStandardStreams = true
-
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Regression" parallel="classes">
+    <listeners>
+        <listener class-name="resource.common.SuiteAlterer"/>
+    </listeners>
+    <test name="Regression testing">
+        <parameter name="browser" value="chrome"/>
+        <packages>
+            <package name="feature.Jira.Issue"></package>
+            <package name="feature.Jira.Issue02"></package>
+        </packages>
+<!--        <classes>-->
+<!--            <class name="feature.Jira.Issue.TC001_Create_Issue_as_the_bug_successfully"/>-->
+<!--            <class name="feature.Jira.Issue02.TC002_Create_Issue_as_the_bug_successfully"/>-->
+<!--            <class name="feature.Jira.Issue02.TC003_Create_Issue_as_the_bug_successfully"/>-->
+<!--        </classes>-->
+    </test>
+</suite>

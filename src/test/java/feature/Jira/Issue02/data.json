@@ -1,0 +1,26 @@
+{
+  "TC002_Create_Issue_as_the_bug_successfully":[
+    {
+      "No.": "Data1",
+      "TestDataPurpose": "Case 002",
+      "RunMode": "Y",
+      "TestingType": "Regression",
+      "TestType": "Positive",
+      "ProjectName": "Project_Demo",
+      "IssueType": "Story",
+      "IssueSummary": "This is a bug"
+      }
+  ],
+  "TC003_Create_Issue_as_the_bug_successfully":[
+    {
+      "No.": "Data2",
+      "TestDataPurpose": "Case 003",
+      "RunMode": "Y",
+      "TestingType": "Regression",
+      "TestType": "Positive",
+      "ProjectName": "Project_Demo",
+      "IssueType": "Bug",
+      "IssueSummary": "This is a bug"
+    }
+  ]
+}
