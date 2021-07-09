@@ -43,7 +43,7 @@ public class TestBase extends Utility {
         // Initial test report
         try {
             htmlReporter = new ExtentHtmlReporter(reportFilePath);
-            htmlReporter.loadXMLConfig(new File(PROJECT_PATH + "/src/main/resources/configuration/config.xml"));
+            htmlReporter.loadXMLConfig(new File(PROJECT_PATH + "/src/main/resources/configuration/config.xml"), false);
             report = new ExtentReports();
             report.attachReporter(htmlReporter);
             logSuite = createTestForExtentReport(report, "Initial Setup");
