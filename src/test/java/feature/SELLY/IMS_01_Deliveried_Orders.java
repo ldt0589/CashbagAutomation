@@ -1,4 +1,4 @@
-package feature.Selly;
+package feature.SELLY;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class Selly_06_Cancelled_The_Waiting_Cancelled_Orders extends TestBase {
+public class IMS_01_Deliveried_Orders extends TestBase {
 
     private String sellerToken = null;
     private String adminToken = null;
@@ -44,7 +44,7 @@ public class Selly_06_Cancelled_The_Waiting_Cancelled_Orders extends TestBase {
             SellyOrderIDList = OrderAPI.createMultiOrder(logStep, sellerToken, customer, data.get("Courier_name"));
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList,"waiting_approved","waiting_approved");
 
-            logStep = logStepInfo(logMethod, "Step #6: Selly Admin APPROVEs orders");
+            logStep = logStepInfo(logMethod, "Step #6: Selly Admin APPROVE orders");
             OrderAPI.SellyConfirmOrder(logStep, SellyOrderIDList, "approve");
             IMSArrayList = OrderAPI.getIMSOrderIdArray(logStep, SellyOrderIDList);
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList,"pending","pending");
@@ -63,15 +63,20 @@ public class Selly_06_Cancelled_The_Waiting_Cancelled_Orders extends TestBase {
             OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "picking");
             OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "pending", "pending");
 
-            logStep = logStepInfo(logMethod, "Step #10: IMS CANCELLED orders");
-            OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "cancelled");
-            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "cancelled");
-            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "waiting_cancelled", "pending");
+            logStep = logStepInfo(logMethod, "Step #10: IMS PICKED orders");
+            OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "picked");
+            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "picked");
+            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "pending", "pending");
 
-            logStep = logStepInfo(logMethod, "Step #11: Selly Admin CANCELs orders");
-            OrderAPI.SellyConfirmOrder(logStep, SellyOrderIDList, "cancel");
-            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList,"cancelled_by_admin","cancelled_by_admin");
-            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "cancelled");
+            logStep = logStepInfo(logMethod, "Step #11: IMS DELIVERING orders");
+            OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "delivering");
+            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "delivering");
+            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "delivering", "delivering");
+
+            logStep = logStepInfo(logMethod, "Step #12: IMS DELIVERED orders");
+            OrderAPI.IMSConfirmOrder(logStep, IMSArrayList, "delivered");
+            OrderAPI.verifyIMSOrderStatus(logStep, IMSArrayList, "completed");
+            OrderAPI.verifySellyOrderStatus(logStep, SellyOrderIDList, "delivered", "delivered");
 
         } catch (Exception e) {
             log4j.error(getStackTrade(e.getStackTrace())) ;

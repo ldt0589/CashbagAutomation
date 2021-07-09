@@ -1,20 +1,22 @@
-package feature.MissionEvent.Referral;
+package feature.CASHBAG.MissionEvent.Referral;
 
 import io.restassured.response.Response;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.Test;
-import resource.api.IssueApi;
 import resource.api.userAPI;
 import resource.common.GlobalVariables;
 import resource.common.TestBase;
-import resource.pages.*;
+import resource.pages.DowloadPage;
+import resource.pages.GoogleSignInPage;
 import resource.pages.ReferralPage;
 import resource.utility.Utility;
+
 import java.io.IOException;
 import java.util.Hashtable;
+
 import static resource.common.GlobalVariables.*;
 
-public class REF03_REF05_User_receive_bonus_when_registering_with_referral_link_in_WEB extends TestBase {
+public class REF04_REF05_User_receive_bonus_when_registering_with_referral_link_in_WEB extends TestBase {
 
     private Response response;
     private userAPI userAPI = new userAPI();

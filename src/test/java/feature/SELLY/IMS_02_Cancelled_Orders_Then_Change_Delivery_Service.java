@@ -1,4 +1,4 @@
-package feature.Selly;
+package feature.SELLY;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

@@ -7,8 +7,7 @@
     <test name="test1">
         <parameter name="browser" value="chrome"/>
         <classes>
-<!--            <class name="feature.Selly.Selly_02_Add_to_Cart"/>-->
-            <class name="feature.Selly.Selly_01_Clear_Cart_Items"/>
+            <class name="REF03_REF05_User_receive_bonus_when_registering_with_referral_link_in_WEB"/>
         </classes>
     </test>
 </suite>

@@ -50,7 +50,7 @@ dependencies {
 }
 
 //task hello {
-//    println('hello ThangLe')
+//    println('hello World')
 //}
 
 test {
@@ -62,12 +62,18 @@ test {
     def testingtype = props.getProperty("TestingType")
 
     useTestNG() {
-//        suites '/suites/RegressionSuite.xml'
+//        suites '/suites/Smoke.xml'
         if (testingtype == 'Regression') {
-            suites '/suites/RegressionSuite2.xml'
+            suites '/suites/SELLY/Regression.xml'
         }
     }
 
-    testLogging.showStandardStreams = true
+    test {
+        testLogging {
+            events "PASSED", "SKIPPED", "FAILED"
+        }
+    }
+
+//    testLogging.showStandardStreams = true
 
 }
