@@ -1,0 +1,14 @@
+{
+  "TC001_Create_Issue_as_the_bug_successfully":[
+    {
+      "No.": "Data1",
+      "TestDataPurpose": "Case 001",
+      "RunMode": "Y",
+      "TestingType": "Regression",
+      "TestType": "Positive",
+      "ProjectName": "Project_Demo",
+      "IssueType": "Story",
+      "IssueSummary": "This is a bug"
+      }
+  ]
+}

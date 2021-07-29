@@ -1,18 +1,28 @@
 package resource.utility.webdrivers;
 
 import com.aventstack.extentreports.ExtentTest;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.IOException;
 
-/**
- * Created by vinh.ly on 8/30/2018.
- */
+
 public class DriverFactory {
     public static RemoteWebDriver createInstance(String browser, ExtentTest logTest) {
         LocalDriver driver = new LocalDriver();
         try {
             return driver.initialDriver(browser, logTest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static RemoteWebDriver createInstance(String platformName, String deviceID, String appPackage, String appActivity, ExtentTest logTest) {
+        MobileDriver driver = new MobileDriver();
+        try {
+            return driver.initialDriver(platformName, deviceID, appPackage, appActivity, logTest);
         } catch (IOException e) {
             e.printStackTrace();
         }

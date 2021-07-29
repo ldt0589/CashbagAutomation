@@ -68,6 +68,9 @@ public class Utility {
     public static void initializeDriver(ExtentTest logTest) throws IOException {
         try {
             switch (GlobalVariables.RUN_ON.toLowerCase()) {
+                case "Mobile":
+                    Utility.setDriver(DriverFactory.createInstance(GlobalVariables.PLATFORM_NAME, GlobalVariables.PLATFORM_VERSION, GlobalVariables.MANUFACTURER, GlobalVariables.MODEL, GlobalVariables.BROWSER, GlobalVariables.BROWSER_VERSION, GlobalVariables.RESOLUTION, GlobalVariables.LOCATION, logTest));
+                    break;
                 case "perfectomobile":
                     Utility.setDriver(DriverFactory.createInstance(GlobalVariables.PLATFORM_NAME, GlobalVariables.PLATFORM_VERSION, GlobalVariables.MANUFACTURER, GlobalVariables.MODEL, GlobalVariables.BROWSER, GlobalVariables.BROWSER_VERSION, GlobalVariables.RESOLUTION, GlobalVariables.LOCATION, logTest));
                     break;

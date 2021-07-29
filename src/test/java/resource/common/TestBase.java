@@ -141,7 +141,7 @@ public class TestBase extends Utility {
                     case("iOS"):
                         PLATFORM_NAME = "iOS";
                         break;
-                    case("Android"):
+                    case("ANDROID"):
                         PLATFORM_NAME = "Android";
                         break;
                     default:
