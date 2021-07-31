@@ -109,7 +109,9 @@ public class GlobalVariables {
     public static final String RECEIPT_PNG_FILE_NAME = "item_receipt.png";
     public static final String RECEIPT_PDF_FILE_NAME = "item_receipt.pdf";
 
-    //Perfecto variables
+    //Mobile variables
+    public static final String APPIUM_SERVER_ADDRESS = "http://0.0.0.0:4723/wd/hub";
+    public static final String APP_LOCATION = "F:\\AUTOMATION\\12.Appium\\vn.selly.staging_1.12.0.apk";
     public static final String PERFECTO_USERNAME = System.getenv("PERFECTO_USERNAME");
     public static final String PERFECTO_TOKEN = System.getenv("PERFECTO_TOKEN");
     public static final String PERFECTO_HOST = "allstate.perfectomobile.com";
@@ -117,6 +119,8 @@ public class GlobalVariables {
     public static final String PERFECTO_CONNECT_MAC = PROJECT_PATH + "/src/main/resources/drivers/perfectoconnect";
     public static final String PERFECTO_CONNECT_WIN = PROJECT_PATH + "/src/main/resources/drivers/perfectoconnect.exe";
     public static String TUNNEL_ID = "";
+    public static String phoneNumber = "0935321012";
+    public static String otp = "123456";
 
     public static Process p;
     public static String TEST_NAME;

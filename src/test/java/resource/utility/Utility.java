@@ -68,8 +68,8 @@ public class Utility {
     public static void initializeDriver(ExtentTest logTest) throws IOException {
         try {
             switch (GlobalVariables.RUN_ON.toLowerCase()) {
-                case "Mobile":
-                    Utility.setDriver(DriverFactory.createInstance(GlobalVariables.PLATFORM_NAME, GlobalVariables.PLATFORM_VERSION, GlobalVariables.MANUFACTURER, GlobalVariables.MODEL, GlobalVariables.BROWSER, GlobalVariables.BROWSER_VERSION, GlobalVariables.RESOLUTION, GlobalVariables.LOCATION, logTest));
+                case "mobile":
+                    Utility.setDriver(DriverFactory.createInstance(GlobalVariables.PLATFORM_NAME, GlobalVariables.APP_LOCATION, logTest));
                     break;
                 case "perfectomobile":
                     Utility.setDriver(DriverFactory.createInstance(GlobalVariables.PLATFORM_NAME, GlobalVariables.PLATFORM_VERSION, GlobalVariables.MANUFACTURER, GlobalVariables.MODEL, GlobalVariables.BROWSER, GlobalVariables.BROWSER_VERSION, GlobalVariables.RESOLUTION, GlobalVariables.LOCATION, logTest));
@@ -88,15 +88,20 @@ public class Utility {
             Platform platForm = ((RemoteWebDriver) Utility.getDriver()).getCapabilities().getPlatform();
             GlobalVariables.IS_MOBILE = (platForm == Platform.ANDROID || platForm == Platform.IOS);
 
-            Utility.getDriver().manage().deleteAllCookies();
+//            Utility.getDriver().manage().deleteAllCookies();
             Utility.getDriver().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-            Utility.getDriver().manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
+//            Utility.getDriver().manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
         } catch (Exception e) {
             GlobalVariables.TOTAL_FAILED++;
             log4j.error("initializeDriver method - ERROR - " + e);
             logException(logTest, "initializeDriver method - ERROR", e);
         }
     }
+
+//    public static boolean isAndroid() {
+//        Object platformName = Utility.getDriver().getCapabilities().getCapability("platformName");
+//        return (platformName != null && platformName.toString().toLowerCase().equals("android"));
+//    }
 
     public static void log4jConfiguration() {
         try {
@@ -163,8 +168,10 @@ public class Utility {
     public static void checkControlExist(ExtentTest logTest, WebElement elementName, String objectName) throws IOException {
         try {
             waitForControl(elementName);
-            if (!doesControlExist(elementName)) logFail(logTest, objectName + " does not exist.");
-            else logPass(logTest, objectName + " exists.");
+            if (!doesControlExist(elementName))
+                logFail(logTest, objectName + " does not exist.");
+            else
+                logPass(logTest, objectName + " exists.");
         } catch (Exception e) {
             log4j.error("checkControlExist - ERROR - " + e);
             logException(logTest, "checkControlExist method - ERROR", e);
@@ -219,7 +226,7 @@ public class Utility {
     public static void logFail(ExtentTest logTest, String description) throws IOException {
         try {
             // Report test fails and capture screenshot
-//            captureScreenshot("FAILED screenshot: ", "fail-", logTest);
+            captureScreenshot("FAILED screenshot: ", "fail-", logTest);
             logTest.fail(MarkupHelper.createLabel(description, ExtentColor.RED));
 //        throw new SkipException(description);
         } catch (SkipException ex) {

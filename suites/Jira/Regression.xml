@@ -6,14 +6,14 @@
     </listeners>
     <test name="Regression testing">
         <parameter name="browser" value="chrome"/>
-        <packages>
-            <package name="feature.Jira.Issue"></package>
-            <package name="feature.Jira.Issue02"></package>
-        </packages>
-<!--        <classes>-->
-<!--            <class name="feature.Jira.Issue.TC001_Create_Issue_as_the_bug_successfully"/>-->
-<!--            <class name="feature.Jira.Issue02.TC002_Create_Issue_as_the_bug_successfully"/>-->
-<!--            <class name="feature.Jira.Issue02.TC003_Create_Issue_as_the_bug_successfully"/>-->
-<!--        </classes>-->
+<!--        <packages>-->
+<!--            <package name="feature.Jira.Issue"></package>-->
+<!--            <package name="feature.Jira.Issue02"></package>-->
+<!--        </packages>-->
+        <classes>
+            <class name="feature.Jira.Issue.TC001_Create_Issue_as_the_bug_successfully"/>
+            <class name="feature.Jira.Issue02.TC002_Create_Issue_as_the_bug_successfully"/>
+            <class name="feature.Jira.Issue02.TC003_Create_Issue_as_the_bug_successfully"/>
+        </classes>
     </test>
 </suite>

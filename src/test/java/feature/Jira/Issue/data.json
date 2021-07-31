@@ -1,8 +1,9 @@
 {
   "TC001_Create_Issue_as_the_bug_successfully":[
     {
-      "No.": "Data1",
-      "TestDataPurpose": "Case 001",
+      "No.": "001",
+      "TCID": "TC001",
+      "TestDataPurpose": "Create_Issue_as_the_bug_successfully",
       "RunMode": "Y",
       "TestingType": "Regression",
       "TestType": "Positive",

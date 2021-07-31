@@ -95,7 +95,7 @@ public class TestBase extends Utility {
         // Validate runOn
         try {
             RUN_ON = System.getProperty("runOn") == null ? configFileReader.getDataFromConfigurationFile("RunOn") : System.getProperty("runOn");
-            if (RUN_ON != null && (RUN_ON.equalsIgnoreCase("Local") || RUN_ON.equalsIgnoreCase("PerfectoMobile") || RUN_ON.equalsIgnoreCase("Grid") || RUN_ON.equalsIgnoreCase("sel-hub-1.qa") || RUN_ON.equalsIgnoreCase("sel-hub-1.production")))
+            if (RUN_ON != null && (RUN_ON.equalsIgnoreCase("Local") || RUN_ON.equalsIgnoreCase("Mobile") || RUN_ON.equalsIgnoreCase("PerfectoMobile") || RUN_ON.equalsIgnoreCase("Grid") || RUN_ON.equalsIgnoreCase("sel-hub-1.qa") || RUN_ON.equalsIgnoreCase("sel-hub-1.production")))
                 logInfo(logSuite, "Run On: " + RUN_ON);
             else
                 logFail(logSuite, "Invalid 'runOn' parameter: " + RUN_ON);
@@ -203,7 +203,7 @@ public class TestBase extends Utility {
 
             // Initial logMethod
             logMethod = createNodeForExtentReport(logClass, dataTest.get("TCID") + ": " + dataTest.get("TestDataPurpose"));
-            log4j.info(dataTest.get("No.") + ": " + dataTest.get("TestDataPurpose"));
+            log4j.info(dataTest.get("TCID") + ": " + dataTest.get("TestDataPurpose"));
 
             // Assign test category
             logMethod.assignCategory(dataTest.get("TestingType"));
@@ -269,15 +269,15 @@ public class TestBase extends Utility {
         getTestCaseExecutionCount(testcaseList);
 
         //This code block is used to keep limited number of reports
-        if (!RUN_ON.equalsIgnoreCase("Local")) {
-            String currentDirectory = System.getProperty("userAPI.dir");
-            File dir = new File(currentDirectory + "/src/main/resources/output");
-            File[] files = dir.listFiles();
-            Arrays.sort(files, Comparator.comparingLong(File::lastModified));
-            for (int i = 0; i < files.length - NUMBER_OF_REPORT; i++) {
-                deleteDirectory(files[i]);
-            }
-        }
+//        if (!RUN_ON.equalsIgnoreCase("Local")) {
+//            String currentDirectory = System.getProperty("userAPI.dir");
+//            File dir = new File(currentDirectory + "/src/main/resources/output");
+//            File[] files = dir.listFiles();
+//            Arrays.sort(files, Comparator.comparingLong(File::lastModified));
+//            for (int i = 0; i < files.length - NUMBER_OF_REPORT; i++) {
+//                deleteDirectory(files[i]);
+//            }
+//        }
 
         log4j.info("afterSuite method - End");
     }

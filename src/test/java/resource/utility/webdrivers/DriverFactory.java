@@ -19,10 +19,10 @@ public class DriverFactory {
         return null;
     }
 
-    public static RemoteWebDriver createInstance(String platformName, String deviceID, String appPackage, String appActivity, ExtentTest logTest) {
+    public static RemoteWebDriver createInstance(String platformName, String appLocation, ExtentTest logTest) {
         MobileDriver driver = new MobileDriver();
         try {
-            return driver.initialDriver(platformName, deviceID, appPackage, appActivity, logTest);
+            return driver.initialDriver(platformName, appLocation, logTest);
         } catch (IOException e) {
             e.printStackTrace();
         }

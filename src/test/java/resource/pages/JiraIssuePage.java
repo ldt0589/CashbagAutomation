@@ -32,7 +32,7 @@ public class JiraIssuePage extends Utility {
     @FindBy(xpath ="//input[contains(@id,'submit')]")
     private WebElement button_submit;
 
-    @FindBy(xpath ="//div[contains(@class,'aui-message-success')]")
+    @FindBy(xpath ="//div[contains(@class,'aui-message-unsuccess')]")
     private WebElement label_success;
 
     @FindBy(xpath ="//div[contains(@class,'aui-message-success')]/a")

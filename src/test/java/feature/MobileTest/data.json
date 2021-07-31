@@ -1,8 +1,9 @@
 {
-  "TC001_Create_Issue_as_the_bug_successfully":[
+  "TC001_Login_application_successfully":[
     {
-      "No.": "Data1",
-      "TestDataPurpose": "Case 001",
+      "No.": "001",
+      "TCID": "TC001",
+      "TestDataPurpose": "Login_application_successfully",
       "RunMode": "Y",
       "TestingType": "Regression",
       "TestType": "Positive",
