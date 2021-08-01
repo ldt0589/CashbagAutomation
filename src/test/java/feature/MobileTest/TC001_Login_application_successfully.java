@@ -22,7 +22,6 @@ public class TC001_Login_application_successfully extends TestBase {
                 MobileLoginPage loginpage = new MobileLoginPage();
 
                 logStep = logStepInfo(logMethod, "Step #1: Open Account Screen");
-//                sleep(3);
                 loginpage.open_Login_screen(logStep);
 
                 logStep = logStepInfo(logMethod, "Step #2: User logins application");

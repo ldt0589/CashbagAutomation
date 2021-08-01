@@ -110,6 +110,8 @@ public class GlobalVariables {
     public static final String RECEIPT_PDF_FILE_NAME = "item_receipt.pdf";
 
     //Mobile variables
+    public static final String APPIUM_SERVER_IP = "0.0.0.0";
+    public static final Integer APPIUM_PORT = 4723;
     public static final String APPIUM_SERVER_ADDRESS = "http://0.0.0.0:4723/wd/hub";
     public static final String APP_LOCATION = "F:\\AUTOMATION\\12.Appium\\vn.selly.staging_1.12.0.apk";
     public static final String PERFECTO_USERNAME = System.getenv("PERFECTO_USERNAME");

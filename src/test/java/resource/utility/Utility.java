@@ -7,11 +7,16 @@ import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.google.gson.*;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.*;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
@@ -33,6 +38,8 @@ import java.util.function.Function;
 
 public class Utility {
     public static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<RemoteWebDriver>();
+
+    public static AppiumDriverLocalService appiumService;
 
     // Add initialization of drivers
     public static String subWindowHandler = null;
@@ -274,9 +281,9 @@ public class Utility {
 
     public static void waitForControl(WebElement controlName) {
         try {
-//            new WebDriverWait(Utility.getDriver(), GlobalVariables.WAIT_TIME).until(ExpectedConditions.visibilityOf(controlName));
+            new WebDriverWait(Utility.getDriver(), GlobalVariables.WAIT_TIME).until(ExpectedConditions.visibilityOf(controlName));
         } catch (Exception ex) {
-            // TBD
+            log4j.error("waitForControl method - ERROR - " + ex);
         }
     }
 
@@ -354,6 +361,13 @@ public class Utility {
         }
     }
 
+    public static int randomNumber() {
+        Random random = new Random();
+        return random.ints(1000, 9999)
+                .findFirst()
+                .getAsInt();
+    }
+
     public static String getWindowHandle(WebDriver driver) {
         // get all the window handles after the popup window appears
         Set<String> afterPopup = driver.getWindowHandles();
@@ -393,6 +407,31 @@ public class Utility {
         } catch (Exception e) {
             log4j.error("Unable to close browser/release device: " + e);
         }
+    }
+
+    public static void startAppiumServer(ExtentTest logTest) {
+
+        //Set Capabilities
+        DesiredCapabilities cap = new DesiredCapabilities();
+        cap.setCapability("noReset", "false");
+
+        //Build the Appium service
+        AppiumServiceBuilder builder = new AppiumServiceBuilder();
+        logInfo(logTest, "Start Appium Server");
+        logInfo(logTest, "APPIUM_SERVER_IP:" + GlobalVariables.APPIUM_SERVER_IP + " && " + "APPIUM_Port:" + randomNumber());
+        builder.withIPAddress(GlobalVariables.APPIUM_SERVER_IP);
+        builder.usingPort(randomNumber());
+        builder.withCapabilities(cap);
+        builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
+        builder.withArgument(GeneralServerFlag.LOG_LEVEL,"error");
+
+        //Start the server with the builder
+        appiumService = AppiumDriverLocalService.buildService(builder);
+        appiumService.start();
+    }
+
+    public static void stopAppiumServer() {
+        appiumService.stop();
     }
 
     public static boolean isTestCaseExecutable(String sheetName, String testName, ExcelReader excelReader) throws IOException {

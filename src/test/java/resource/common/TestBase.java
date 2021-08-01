@@ -230,6 +230,10 @@ public class TestBase extends Utility {
         quit(logMethod);
         logMethod = null;
 
+        //Stop Appium Server
+        if(RUN_ON.equalsIgnoreCase("Mobile"))
+            Utility.stopAppiumServer();
+
         log4j.info("afterMethod method - End");
     }
 

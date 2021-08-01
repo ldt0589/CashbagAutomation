@@ -31,6 +31,8 @@ public class MobileLoginPage extends Utility {
     private WebElement inputPhone;
 
     public void open_Login_screen(ExtentTest logTest) {
+//        Utility.sleep(3);
+        waitForControl(tabAccount);
         tabAccount.click();
 //        buttonNext.click();
     }
