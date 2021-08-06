@@ -281,7 +281,7 @@ public class Utility {
 
     public static void waitForControl(WebElement controlName) {
         try {
-            new WebDriverWait(Utility.getDriver(), GlobalVariables.WAIT_TIME).until(ExpectedConditions.visibilityOf(controlName));
+//            new WebDriverWait(Utility.getDriver(), GlobalVariables.WAIT_TIME).until(ExpectedConditions.visibilityOf(controlName));
         } catch (Exception ex) {
             log4j.error("waitForControl method - ERROR - " + ex);
         }
